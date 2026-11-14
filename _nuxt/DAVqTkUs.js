@@ -1,0 +1,1 @@
+function e(){function e(e){if(!e)return``;let[t,n,r]=e.slice(0,10).split(`-`);return!t||!n||!r?e:`${t} 年 ${Number(n)} 月 ${Number(r)} 日`}return{format:e}}export{e as t};
