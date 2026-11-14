@@ -1,0 +1,6 @@
+title: Nuxt Content 官方文档
+url: https://content.nuxt.com/docs
+source: content.nuxt.com
+tags: [Nuxt, 建站]
+note: 本站内容层的核心依赖，collections 数据模型与 Markdown 渲染都基于它。
+date: "2026-11-01"

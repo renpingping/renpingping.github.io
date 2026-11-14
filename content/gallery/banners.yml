@@ -1,0 +1,31 @@
+title: 站点横幅图集
+description: 建站以来收集使用的横幅背景图。
+cover: /images/banner/0.jpg
+date: "2020-06-18"
+images:
+  - src: /images/banner/0.jpg
+    alt: 横幅 0
+  - src: /images/banner/1.jpg
+    alt: 横幅 1
+  - src: /images/banner/2.jpg
+    alt: 横幅 2
+  - src: /images/banner/3.jpg
+    alt: 横幅 3
+  - src: /images/banner/4.jpg
+    alt: 横幅 4
+  - src: /images/banner/5.jpg
+    alt: 横幅 5
+  - src: /images/banner/6.jpg
+    alt: 横幅 6
+  - src: /images/banner/11.jpg
+    alt: 横幅 11
+  - src: /images/banner/12.jpg
+    alt: 横幅 12
+  - src: /images/banner/13.jpg
+    alt: 横幅 13
+  - src: /images/banner/14.jpg
+    alt: 横幅 14
+  - src: /images/banner/15.jpg
+    alt: 横幅 15
+  - src: /images/banner/16.jpg
+    alt: 横幅 16

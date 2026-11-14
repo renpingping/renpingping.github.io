@@ -1,0 +1,37 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run generate
+
+      - name: Ensure .nojekyll
+        run: touch .output/public/.nojekyll
+
+      - name: Deploy to renpingping.github.io
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          external_repository: renpingping/renpingping.github.io
+          publish_branch: master
+          publish_dir: .output/public
+          keep_files: false
+          commit_message: "Site deployed from ther-blog ${{ github.sha }}"

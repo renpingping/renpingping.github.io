@@ -1,0 +1,6 @@
+title: Tailwind CSS v4 文档
+url: https://tailwindcss.com/docs
+source: tailwindcss.com
+tags: [CSS, 前端]
+note: v4 改为 CSS-first 配置（@theme / @custom-variant），不再需要 tailwind.config.js。
+date: "2026-11-01"

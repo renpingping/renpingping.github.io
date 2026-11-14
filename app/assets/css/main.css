@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-zinc-50 text-zinc-800 antialiased dark:bg-zinc-950 dark:text-zinc-200;
+}
+
+::selection {
+  @apply bg-indigo-500/30;
+}
+
+/* Shiki 双主题：暗色下切换到 dark 变量 */
+html.dark .shiki,
+html.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+/* Content 正文排版 */
+.prose-ther {
+  @apply leading-relaxed;
+}
+.prose-ther h2 {
+  @apply mt-10 mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100;
+}
+.prose-ther h3 {
+  @apply mt-8 mb-3 text-xl font-semibold text-zinc-900 dark:text-zinc-100;
+}
+.prose-ther p {
+  @apply my-4;
+}
+.prose-ther a {
+  @apply text-indigo-600 underline decoration-indigo-300 underline-offset-2 transition-colors hover:text-indigo-500 dark:text-indigo-400 dark:decoration-indigo-700;
+}
+.prose-ther ul {
+  @apply my-4 list-disc pl-6;
+}
+.prose-ther ol {
+  @apply my-4 list-decimal pl-6;
+}
+.prose-ther li {
+  @apply my-1;
+}
+.prose-ther blockquote {
+  @apply my-4 border-l-4 border-zinc-300 pl-4 text-zinc-600 dark:border-zinc-700 dark:text-zinc-400;
+}
+.prose-ther code:not(pre code) {
+  @apply rounded bg-zinc-200/70 px-1.5 py-0.5 text-[0.875em] font-medium text-pink-600 dark:bg-zinc-800 dark:text-pink-400;
+}
+.prose-ther table {
+  @apply my-4 w-full text-sm;
+}
+.prose-ther th {
+  @apply border-b border-zinc-300 px-3 py-2 text-left font-semibold dark:border-zinc-700;
+}
+.prose-ther td {
+  @apply border-b border-zinc-200 px-3 py-2 dark:border-zinc-800;
+}
+.prose-ther img {
+  @apply my-4 rounded-lg;
+}
+.prose-ther hr {
+  @apply my-8 border-zinc-200 dark:border-zinc-800;
+}
