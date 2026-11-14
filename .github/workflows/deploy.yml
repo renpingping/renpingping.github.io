@@ -2,11 +2,11 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [source]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   deploy:
@@ -26,12 +26,11 @@ jobs:
       - name: Ensure .nojekyll
         run: touch .output/public/.nojekyll
 
-      - name: Deploy to renpingping.github.io
+      - name: Deploy to master (GitHub Pages)
         uses: peaceiris/actions-gh-pages@v4
         with:
-          personal_token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
-          external_repository: renpingping/renpingping.github.io
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: master
           publish_dir: .output/public
           keep_files: false
-          commit_message: "Site deployed from ther-blog ${{ github.sha }}"
+          commit_message: "Site deployed from source@${{ github.sha }}"
