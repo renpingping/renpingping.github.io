@@ -19,13 +19,13 @@ const filtered = computed(() =>
     : posts.value ?? [],
 )
 
-useHead({ title: '博客' })
+useHead({ title: '文章' })
 </script>
 
 <template>
   <div>
     <header class="mb-8">
-      <h1 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100">博客</h1>
+      <h1 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100">文章</h1>
       <p class="mt-2 text-sm text-zinc-500">记录技术、工具与折腾的痕迹</p>
     </header>
 

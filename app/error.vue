@@ -35,7 +35,7 @@ function goHome() {
         {{ error.statusCode === 404 ? '页面不存在' : '出错了' }}
       </h1>
       <p v-if="error.statusCode === 404 && !redirected" class="mt-2 text-sm text-zinc-500">
-        你访问的地址可能已迁移，试试从首页或博客列表找找。
+        你访问的地址可能已迁移，试试从首页或文章列表找找。
       </p>
       <div class="mt-8 flex gap-3">
         <button
@@ -48,7 +48,7 @@ function goHome() {
           to="/blog"
           class="rounded-lg border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:border-zinc-400 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500"
         >
-          浏览博客
+          浏览文章
         </NuxtLink>
       </div>
     </div>

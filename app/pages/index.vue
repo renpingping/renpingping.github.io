@@ -53,7 +53,7 @@ const { format } = useFormatDate()
       <div class="mb-5 flex items-end justify-between">
         <h2 class="text-xl font-bold text-zinc-900 dark:text-zinc-100">精选项目</h2>
         <NuxtLink to="/projects" class="text-sm text-indigo-600 transition-colors hover:text-indigo-500 dark:text-indigo-400">
-          全部作品 →
+          全部 Demo →
         </NuxtLink>
       </div>
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
