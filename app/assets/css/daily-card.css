@@ -20,18 +20,24 @@ html.dark .daily-card:hover {
   border-color: #444c56;
 }
 
-/* 标题：继承正文颜色，无下划线，悬停变色 */
+/* 标题：完全去除 a 标签样式（覆盖主题 .prose-ther a），悬停变色 */
 .daily-title {
   font-size: 1.02rem;
   font-weight: 600;
   line-height: 1.55;
 }
+.prose-ther .daily-title a,
 .daily-title a {
   color: inherit;
   text-decoration: none;
+  border-bottom: none;
+  box-shadow: none;
+  background: none;
 }
+.prose-ther .daily-title a:hover,
 .daily-title a:hover {
   color: #0969da;
+  text-decoration: none;
 }
 html.dark .daily-title a:hover {
   color: #58a6ff;
