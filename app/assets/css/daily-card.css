@@ -26,6 +26,11 @@ html.dark .daily-card:hover {
   font-weight: 600;
   line-height: 1.55;
 }
+/* 分类标题：Nuxt Content 给 h1-h4 自动包了锚点<a>，同样去除链接样式 */
+.prose-ther h1 a,
+.prose-ther h2 a,
+.prose-ther h3 a,
+.prose-ther h4 a,
 .prose-ther .daily-title a,
 .daily-title a {
   color: inherit;
@@ -33,6 +38,13 @@ html.dark .daily-card:hover {
   border-bottom: none;
   box-shadow: none;
   background: none;
+}
+.prose-ther h1 a:hover,
+.prose-ther h2 a:hover,
+.prose-ther h3 a:hover,
+.prose-ther h4 a:hover {
+  color: inherit;
+  text-decoration: none;
 }
 .prose-ther .daily-title a:hover,
 .daily-title a:hover {
