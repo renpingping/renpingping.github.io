@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2026-11-01',
   modules: ['@nuxt/content', '@nuxtjs/color-mode'],
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/daily-card.css'],
 
   components: [{ path: '~/components', pathPrefix: false }],
 

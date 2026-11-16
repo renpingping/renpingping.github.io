@@ -1,0 +1,103 @@
+/* 每日技术热读卡片样式（DailyCard 组件 + 主题适配） */
+
+.daily-card {
+  margin: 14px 0;
+  padding: 14px 18px;
+  border: 1px solid #e4e8ec;
+  border-radius: 12px;
+  background: #fafbfc;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+html.dark .daily-card {
+  border-color: #2d333b;
+  background: rgba(22, 27, 34, 0.4);
+}
+.daily-card:hover {
+  border-color: #a5b4c6;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+html.dark .daily-card:hover {
+  border-color: #444c56;
+}
+
+/* 标题：继承正文颜色，无下划线，悬停变色 */
+.daily-title {
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+.daily-title a {
+  color: inherit;
+  text-decoration: none;
+}
+.daily-title a:hover {
+  color: #0969da;
+}
+html.dark .daily-title a:hover {
+  color: #58a6ff;
+}
+
+/* 信息行：来源chip + 热度 + 推荐分 */
+.daily-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+  font-size: 12px;
+  color: #57606a;
+}
+html.dark .daily-meta {
+  color: #8b949e;
+}
+.daily-chip {
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+}
+.chip-hn { background: #ff6600; }
+.chip-juejin { background: #1e80ff; }
+.chip-qbitai { background: #00b96b; }
+.chip-bili { background: #fb7299; }
+.chip-other { background: #8c959f; }
+.daily-metric {
+  font-variant-numeric: tabular-nums;
+}
+.daily-score {
+  margin-left: auto;
+  padding: 2px 10px;
+  border-radius: 8px;
+  background: #eaeef2;
+  color: #57606a;
+  font-weight: 700;
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+.daily-score.hot {
+  background: #1a7f37;
+  color: #fff;
+}
+html.dark .daily-score {
+  background: #21262d;
+  color: #8b949e;
+}
+html.dark .daily-score.hot {
+  background: #2ea043;
+}
+
+/* 摘要：左侧竖线引用 */
+.daily-summary {
+  margin-top: 9px;
+  padding-left: 10px;
+  border-left: 3px solid #d8dee4;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #4b535c;
+}
+html.dark .daily-summary {
+  border-left-color: #30363d;
+  color: #9198a1;
+}
