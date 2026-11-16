@@ -2,12 +2,12 @@
 const config = useAppConfig()
 
 const skills = [
-  { name: 'JavaScript', percent: 80 },
+  { name: 'JavaScript', percent: 88 },
   { name: 'HTML5 / CSS3', percent: 80 },
-  { name: 'Vue', percent: 85 },
-  { name: 'Java', percent: 85 },
-  { name: 'SQL', percent: 90 },
-  { name: '程序设计', percent: 75 },
+  { name: 'Vue', percent: 90 },
+  { name: 'React', percent: 92 },
+  { name: 'SQL', percent: 72 },
+  { name: '产品设计', percent: 88 },
 ]
 
 useHead({ title: '关于' })
@@ -20,8 +20,7 @@ useHead({ title: '关于' })
       <h1 class="mt-5 text-3xl font-bold text-zinc-900 dark:text-zinc-100">{{ config.site.author }}</h1>
       <p class="mt-2 text-sm text-zinc-500">Software Engineer</p>
       <p class="mt-6 leading-relaxed text-zinc-600 dark:text-zinc-400">
-        前端工程师，喜欢折腾建站、数据可视化与效率工具。
-        这里记录技术笔记、项目作品和读过的好的文章。
+        记录技术笔记、项目作品和读过的好的文章。
       </p>
       <div class="mt-6">
         <SocialLinks />
