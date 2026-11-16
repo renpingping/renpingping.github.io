@@ -13,10 +13,6 @@ const year = new Date().getFullYear()
           rel="noopener"
           class="transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
         >GitHub</a>
-        <a
-          :href="`mailto:${config.site.email}`"
-          class="transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
-        >邮箱</a>
         <NuxtLink to="/about" class="transition-colors hover:text-zinc-800 dark:hover:text-zinc-200">
           关于
         </NuxtLink>

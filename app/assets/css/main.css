@@ -28,9 +28,9 @@ html.dark .shiki span {
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
-/* Content 正文排版 */
+/* Content 正文排版：加半透明底板 + 轻微模糊，避免背景分支影响阅读 */
 .prose-ther {
-  @apply leading-relaxed;
+  @apply rounded-2xl bg-zinc-50/80 p-6 leading-relaxed shadow-xs backdrop-blur-[2px] sm:p-8 dark:bg-zinc-900/70;
 }
 .prose-ther h2 {
   @apply mt-10 mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100;
