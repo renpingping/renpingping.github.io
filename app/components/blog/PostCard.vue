@@ -34,7 +34,7 @@ const { format } = useFormatDate()
       <p v-if="post.description" class="mt-2 line-clamp-2 text-sm text-zinc-500">{{ post.description }}</p>
       <div class="mt-4 flex flex-wrap items-center gap-2">
         <time class="text-xs text-zinc-400">{{ format(post.date) }}</time>
-        <TagChip v-for="t in post.tags" :key="t" :tag="t" />
+        <TagChip v-for="t in post.tags" :key="t" :tag="t" :clickable="false" />
       </div>
     </div>
   </NuxtLink>

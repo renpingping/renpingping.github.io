@@ -8,11 +8,13 @@ const year = new Date().getFullYear()
     <div class="mx-auto flex max-w-5xl flex-col items-center gap-3 px-4 text-center text-sm text-zinc-500 sm:px-6">
       <div class="flex items-center gap-4">
         <a
-          :href="config.site.socials[0].url"
+          v-for="s in config.site.socials"
+          :key="s.label"
+          :href="s.url"
           target="_blank"
           rel="noopener"
           class="transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
-        >GitHub</a>
+        >{{ s.label }}</a>
         <NuxtLink to="/about" class="transition-colors hover:text-zinc-800 dark:hover:text-zinc-200">
           关于
         </NuxtLink>

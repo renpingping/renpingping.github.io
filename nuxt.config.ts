@@ -34,13 +34,12 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'zh-CN' },
-      titleTemplate: (title?: string) => (title ? `${title} · ther` : 'ther'),
       meta: [
         { name: 'description', content: 'renpingping 的个人博客与作品展示' },
         { name: 'author', content: 'renpingping' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       ],
-      link: [{ rel: 'icon', type: 'image/png', href: '/logo.png' }],
+      link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }],
     },
   },
 

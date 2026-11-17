@@ -3,13 +3,7 @@ const { data: posts } = await useAsyncData('tags-all', () =>
   queryCollection('blog').order('date', 'DESC').all(),
 )
 
-const tags = computed(() => {
-  const counter = new Map<string, number>()
-  for (const p of posts.value ?? []) {
-    for (const t of p.tags ?? []) counter.set(t, (counter.get(t) ?? 0) + 1)
-  }
-  return [...counter.entries()].sort((a, b) => b[1] - a[1])
-})
+const { allTags: tags } = useTagFilter(posts)
 
 useHead({ title: '标签' })
 </script>

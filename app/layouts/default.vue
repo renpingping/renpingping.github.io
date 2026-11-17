@@ -1,6 +1,13 @@
+<script setup lang="ts">
+const route = useRoute()
+// 文章详情页（/blog/xxx）用 039 流场背景，其余页面用 013 分支背景
+const isArticleDetail = computed(() => /^\/blog\/.+/.test(route.path))
+</script>
+
 <template>
   <div class="flex min-h-screen flex-col">
-    <BranchBackground />
+    <FlowFieldBackground v-if="isArticleDetail" />
+    <BranchBackground v-else />
     <SiteHeader />
     <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6">
       <slot />

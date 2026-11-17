@@ -3,23 +3,6 @@ import type { NuxtError } from '#app'
 
 const props = defineProps<{ error: NuxtError }>()
 
-// 旧 Hexo 链接 → 新站路由映射（仅 2 篇文章）
-const LEGACY_MAP: Record<string, string> = {
-  '/2020/06/18/hello-world/': '/blog/hello-world',
-  '/2020/06/21/hexo-emoji/': '/blog/hexo-emoji',
-}
-
-const redirected = ref(false)
-
-onMounted(() => {
-  const path = window.location.pathname.replace(/\/index\.html$/, '').replace(/^(.+?)\/?$/, '$1/')
-  const target = LEGACY_MAP[path] ?? LEGACY_MAP[path.replace(/\/$/, '')]
-  if (target) {
-    redirected.value = true
-    navigateTo(target, { replace: true })
-  }
-})
-
 useHead({ title: props.error.statusCode === 404 ? '页面不存在' : '出错了' })
 
 function goHome() {
@@ -34,7 +17,7 @@ function goHome() {
       <h1 class="mt-4 text-xl font-semibold text-zinc-900 dark:text-zinc-100">
         {{ error.statusCode === 404 ? '页面不存在' : '出错了' }}
       </h1>
-      <p v-if="error.statusCode === 404 && !redirected" class="mt-2 text-sm text-zinc-500">
+      <p v-if="error.statusCode === 404" class="mt-2 text-sm text-zinc-500">
         你访问的地址可能已迁移，试试从首页或文章列表找找。
       </p>
       <div class="mt-8 flex gap-3">

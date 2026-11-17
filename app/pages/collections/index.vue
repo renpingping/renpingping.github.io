@@ -3,21 +3,7 @@ const { data: items } = await useAsyncData('collections-list', () =>
   queryCollection('collections').order('date', 'DESC').all(),
 )
 
-const activeTag = ref<string | null>(null)
-
-const allTags = computed(() => {
-  const counter = new Map<string, number>()
-  for (const it of items.value ?? []) {
-    for (const t of it.tags ?? []) counter.set(t, (counter.get(t) ?? 0) + 1)
-  }
-  return [...counter.entries()].sort((a, b) => b[1] - a[1])
-})
-
-const filtered = computed(() =>
-  activeTag.value
-    ? (items.value ?? []).filter(it => it.tags?.includes(activeTag.value!))
-    : items.value ?? [],
-)
+const { activeTag, allTags, filtered } = useTagFilter(items)
 
 useHead({ title: '收藏' })
 </script>

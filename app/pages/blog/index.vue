@@ -3,21 +3,7 @@ const { data: posts } = await useAsyncData('blog-list', () =>
   queryCollection('blog').order('date', 'DESC').all(),
 )
 
-const activeTag = ref<string | null>(null)
-
-const allTags = computed(() => {
-  const counter = new Map<string, number>()
-  for (const p of posts.value ?? []) {
-    for (const t of p.tags ?? []) counter.set(t, (counter.get(t) ?? 0) + 1)
-  }
-  return [...counter.entries()].sort((a, b) => b[1] - a[1])
-})
-
-const filtered = computed(() =>
-  activeTag.value
-    ? (posts.value ?? []).filter(p => p.tags?.includes(activeTag.value!))
-    : posts.value ?? [],
-)
+const { activeTag, allTags, filtered } = useTagFilter(posts)
 
 useHead({ title: '文章' })
 </script>

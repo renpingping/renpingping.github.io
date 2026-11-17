@@ -1,0 +1,7 @@
+title: 记忆翻牌小游戏
+description: Vue 3 组合式 API 实现的记忆翻牌配对小游戏，含计步与计时。
+tech: [Vue 3, TypeScript, Tailwind CSS]
+link: /demos/interactive-cards
+cover: /images/demos/interactive-cards.jpg
+date: "2026-11-16"
+featured: false

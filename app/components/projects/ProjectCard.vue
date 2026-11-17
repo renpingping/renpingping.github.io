@@ -14,6 +14,9 @@ defineProps<{
 }>()
 
 const { format } = useFormatDate()
+
+// /ZONE 为纯静态页（非 SPA 路由），走整页跳转；其余站内链接走 SPA 路由
+const isSpaLink = (link: string) => !link.startsWith('http') && !link.startsWith('/ZONE')
 </script>
 
 <template>
@@ -53,8 +56,17 @@ const { format } = useFormatDate()
             rel="noopener"
             class="text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
           >源码</a>
+          <!-- 站内 SPA 路由用 NuxtLink；外链与 /ZONE 静态页用 a -->
+          <NuxtLink
+            v-if="project.link && isSpaLink(project.link)"
+            :to="project.link"
+            class="inline-flex items-center gap-1 font-medium text-indigo-600 transition-colors hover:text-indigo-500 dark:text-indigo-400"
+          >
+            查看演示
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M8 7h9v9" /></svg>
+          </NuxtLink>
           <a
-            v-if="project.link"
+            v-else-if="project.link"
             :href="project.link"
             :target="project.link.startsWith('http') ? '_blank' : undefined"
             :rel="project.link.startsWith('http') ? 'noopener' : undefined"

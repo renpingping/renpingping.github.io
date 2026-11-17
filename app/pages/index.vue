@@ -28,7 +28,7 @@ const { format } = useFormatDate()
         {{ config.site.name }}
       </h1>
       <p class="mt-3 max-w-md text-zinc-500">
-        {{ config.site.description }} · 从来没有真正的绝境，只有心灵的迷途
+        明年依然好时节，扬帆再赴星辰约
       </p>
       <div class="mt-6">
         <SocialLinks />

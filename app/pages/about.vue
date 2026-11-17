@@ -48,7 +48,7 @@ useHead({ title: '关于' })
         由 <a href="https://nuxt.com" target="_blank" rel="noopener" class="text-indigo-600 hover:underline dark:text-indigo-400">Nuxt</a>
         + <a href="https://content.nuxt.com" target="_blank" rel="noopener" class="text-indigo-600 hover:underline dark:text-indigo-400">Nuxt Content</a>
         构建，源码托管在
-        <a :href="`${config.site.socials[0].url}/ther-blog`" target="_blank" rel="noopener" class="text-indigo-600 hover:underline dark:text-indigo-400">GitHub</a>，
+        <a :href="config.site.repo" target="_blank" rel="noopener" class="text-indigo-600 hover:underline dark:text-indigo-400">GitHub</a>，
         通过 GitHub Actions 自动部署。
       </p>
     </section>
