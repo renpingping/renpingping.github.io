@@ -1,0 +1,1 @@
+import{d as e,tt as t}from"./DkPrQyzd.js";function n(n){let r=t(null);return{activeTag:r,allTags:e(()=>{let e=new Map;for(let t of n.value??[])for(let n of t.tags??[])e.set(n,(e.get(n)??0)+1);return[...e.entries()].sort((e,t)=>t[1]-e[1])}),filtered:e(()=>r.value?(n.value??[]).filter(e=>e.tags?.includes(r.value)):n.value??[])}}export{n as t};
