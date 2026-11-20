@@ -21,11 +21,14 @@ const isDaily = computed(() => (post.value?.tags ?? []).includes('技术热读')
 
 const { format } = useFormatDate()
 
+// title/description 用 getter 保持响应式：上一篇/下一篇是同路由参数变化，
+// 组件复用不重跑 setup，若取一次性字符串会导致标签页标题停留在旧文章
 useHead({
-  title: post.value.title,
-  meta: post.value.description
-    ? [{ name: 'description', content: post.value.description }]
-    : [],
+  title: () => post.value?.title ?? '',
+  meta: [{
+    name: 'description',
+    content: () => post.value?.description ?? '',
+  }],
 })
 </script>
 

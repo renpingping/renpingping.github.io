@@ -1,6 +1,6 @@
 # ther-blog
 
-个人博客与作品展示站：文章、Demo、画廊、收藏一体化，由 Nuxt 4 + Nuxt Content v3 驱动，静态生成后部署在 GitHub Pages。
+个人博客与作品展示站：文章、周报、Demo、画廊、收藏一体化，由 Nuxt 4 + Nuxt Content v3 驱动，静态生成后部署在 GitHub Pages。
 
 - **线上地址**：<https://renpingping.github.io/>
 - **源码仓库**：<https://github.com/renpingping/renpingping.github.io/tree/source>（`source` 分支为开发分支，`master` 分支为构建产物）
@@ -44,6 +44,8 @@ npm run preview      # 预览构建产物（nitro server）
 | 首页 | <https://renpingping.github.io/> |
 | 文章列表 | <https://renpingping.github.io/blog> |
 | 文章详情（示例：每日技术热读） | <https://renpingping.github.io/blog/day_2026-11-16> |
+| 周报列表 | <https://renpingping.github.io/weekly> |
+| 周报详情（示例：GitHub AI 趋势周报） | <https://renpingping.github.io/weekly/2026-11-20> |
 | Demo 列表 | <https://renpingping.github.io/projects> |
 | 画廊 | <https://renpingping.github.io/gallery> |
 | 相册：站点横幅图集 | <https://renpingping.github.io/gallery/banners> |
@@ -51,6 +53,7 @@ npm run preview      # 预览构建产物（nitro server）
 | 收藏 | <https://renpingping.github.io/collections> |
 | 标签 | <https://renpingping.github.io/tags> |
 | 标签页（示例：技术热读） | <https://renpingping.github.io/tags/技术热读> |
+| 标签页（示例：GitHub周报） | <https://renpingping.github.io/tags/GitHub周报> |
 | 关于 | <https://renpingping.github.io/about> |
 
 #### 站内 Demo（Vue 实现）
@@ -73,6 +76,7 @@ npm run preview      # 预览构建产物（nitro server）
 
 - 首页：<http://localhost:3000/>
 - 文章详情：<http://localhost:3000/blog/day_2026-11-16>
+- 周报详情：<http://localhost:3000/weekly/2026-11-20>
 - 记忆翻牌：<http://localhost:3000/demos/interactive-cards>
 - 大屏演示：<http://localhost:3000/ZONE/bigdataNetwork3_demo/>
 
@@ -88,6 +92,7 @@ ther-blog/
 │   ├── pages/                  # 文件路由
 │   │   ├── index.vue           # 首页：最新文章 + 精选项目 + 最近收藏
 │   │   ├── blog/               # 文章列表 / [slug] 详情（含目录、上下篇）
+│   │   ├── weekly/             # GitHub 周报列表 / [slug] 详情
 │   │   ├── projects/           # Demo 列表
 │   │   ├── gallery/            # 画廊列表 / [album] 相册（灯箱）
 │   │   ├── collections/        # 收藏列表（标签筛选）
@@ -145,6 +150,14 @@ cover: /images/featureimages/0.jpg
 
 - 带「技术热读」标签的文章详情页会自动隐藏侧栏目录并拉宽正文列。
 
+### 新增周报 `content/weekly/*.md`
+
+与文章同一 frontmatter schema（`title` / `description` / `date` / `tags` / `cover`），文件名即路由 slug：`2026-11-20.md` → `/weekly/2026-11-20`。
+
+- 约定打上 `GitHub周报` 标签；标签云与标签页会**合并 `blog` 与 `weekly` 两个集合**统计与筛选。
+- 正文同样可用 `::daily-card` MDC 卡片（推荐分、热度等）。
+- 页头副标题标注「每周五 14:30 自动更新」：周报内容由仓库外的自动化生成并推送 `source` 分支（本仓库内只有构建部署流水线，无生成 workflow）。
+
 ### 新增 Demo `content/projects/*.yml`
 
 ```yaml
@@ -188,7 +201,7 @@ date: "2026-11-18"
 - 全站正文字体为自制手写字体 **MyHand**（`public/fonts/MyHand-Regular.woff2` 自托管，`@theme` 中回退到 PingFang SC 等系统中文字体）。
 - 暗色模式基于 `html.dark` 类；Tailwind v4 通过 `@custom-variant dark` 适配，代码高亮通过 `html.dark .shiki` 切换 Shiki 双主题变量。
 - 正文排版集中在 `app/assets/css/main.css` 的 `.prose-ther`；每日热读卡片样式在 `daily-card.css`。
-- 全站背景为 Canvas「分支生长」（进入页面播放一次），文章详情页切换为 p5i「噪声流场」，见 `app/components/ui/`。
+- 全站背景为 Canvas「分支生长」（进入页面播放一次），长文详情页（`/blog/*`、`/weekly/*`）切换为 p5i「噪声流场」，见 `app/components/ui/`。
 
 ## 部署
 

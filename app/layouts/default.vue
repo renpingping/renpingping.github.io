@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
-// 文章详情页（/blog/xxx）用 039 流场背景，其余页面用 013 分支背景
-const isArticleDetail = computed(() => /^\/blog\/.+/.test(route.path))
+// 长文阅读页（/blog/xxx、/weekly/xxx）用 039 流场背景，其余页面用 013 分支背景
+const isArticleDetail = computed(() => /^\/(blog|weekly)\/.+/.test(route.path))
 </script>
 
 <template>

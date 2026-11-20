@@ -11,11 +11,13 @@ if (!post.value) {
 
 const { format } = useFormatDate()
 
+// 与 blog/[slug].vue 保持一致：getter 保持响应式，避免同路由参数变化时标题不更新
 useHead({
-  title: post.value.title,
-  meta: post.value.description
-    ? [{ name: 'description', content: post.value.description }]
-    : [],
+  title: () => post.value?.title ?? '',
+  meta: [{
+    name: 'description',
+    content: () => post.value?.description ?? '',
+  }],
 })
 </script>
 
