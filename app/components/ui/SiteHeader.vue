@@ -5,6 +5,7 @@ const open = ref(false)
 const nav = [
   { label: '首页', to: '/' },
   { label: '文章', to: '/blog' },
+  { label: '周报', to: '/weekly' },
   { label: 'Demo', to: '/projects' },
   { label: '画廊', to: '/gallery' },
   { label: '收藏', to: '/collections' },

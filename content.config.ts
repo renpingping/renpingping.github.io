@@ -14,6 +14,18 @@ export default defineContentConfig({
       }),
     }),
 
+    weekly: defineCollection({
+      type: 'page',
+      source: 'weekly/*.md',
+      schema: z.object({
+        title: z.string(),
+        description: z.string().optional(),
+        date: z.string(),
+        tags: z.array(z.string()).default([]),
+        cover: z.string().optional(),
+      }),
+    }),
+
     projects: defineCollection({
       type: 'data',
       source: 'projects/*.yml',
