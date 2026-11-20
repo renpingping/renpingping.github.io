@@ -1,9 +1,15 @@
 <script setup lang="ts">
 const route = useRoute()
-const tag = computed(() => decodeURIComponent(route.params.tag as string))
+// Vue Router 返回的 params 已解码，切勿再 decodeURIComponent（否则标签含 % 等字符会抛 URIError）
+const tag = computed(() => route.params.tag as string)
 
 const { data: posts } = await useAsyncData(`tag-${tag.value}`, () =>
-  queryCollection('blog').order('date', 'DESC').all(),
+  Promise.all([
+    queryCollection('blog').order('date', 'DESC').all(),
+    queryCollection('weekly').order('date', 'DESC').all(),
+  ]).then(([blog, weekly]) =>
+    [...blog, ...weekly].sort((a, b) => b.date.localeCompare(a.date)),
+  ),
 )
 
 const matched = computed(() =>

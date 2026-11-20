@@ -1,6 +1,11 @@
 <script setup lang="ts">
 const { data: posts } = await useAsyncData('tags-all', () =>
-  queryCollection('blog').order('date', 'DESC').all(),
+  Promise.all([
+    queryCollection('blog').order('date', 'DESC').all(),
+    queryCollection('weekly').order('date', 'DESC').all(),
+  ]).then(([blog, weekly]) =>
+    [...blog, ...weekly].sort((a, b) => b.date.localeCompare(a.date)),
+  ),
 )
 
 const { allTags: tags } = useTagFilter(posts)
