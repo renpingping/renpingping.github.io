@@ -1,11 +1,11 @@
 import type { Ref, ComputedRef } from 'vue'
 import { computed } from 'vue'
 import type { Section } from '~/config/sections'
-import { belongsSection, getSection, pageSizeOf, sections } from '~/config/sections'
+import { getSection, pageSizeOf, sections } from '~/config/sections'
 import type { PostSummary } from '~/types/post'
 import { POST_SUMMARY_FIELDS } from '~/types/post'
 import { pageCount } from '~/utils/pagination'
-import { surroundOf } from '~/utils/posts'
+import { canShowPost, normalizePath, surroundOf } from '~/utils/posts'
 
 const HOME_POST_COUNT = 4
 
@@ -98,10 +98,11 @@ export function useHomePosts(): AsyncPosts {
  * 需要在页面的 setup 里 await；文章不存在或不属于该板块时抛出 404。
  */
 export async function usePostPage(section: Section) {
-  const route = useRoute()
-  const path = route.path
+  // GitHub Pages 的规范地址带尾斜杠，路由给出的路径会保留它。统一去掉尾斜杠，
+  // 数据键才能对上预渲染的页面数据（否则会在浏览器里重新查询），路径比较才可靠。
+  const path = normalizePath(useRoute().path)
 
-  // Nuxt 的 composable 必须在第一个 await 之前同步调用：普通 async 函数一旦 await，当前实例的上下文就没了
+  // Nuxt 的 composable 必须在第一个 await 之前同步调用
   const postFetch = useAsyncData(path, () =>
     queryCollection('posts').path(path).first(),
   )
@@ -109,8 +110,8 @@ export async function usePostPage(section: Section) {
 
   const { data: post } = await postFetch
 
-  // 合并集合后文章路径全局唯一，但页面只能展示自己板块下的文章：跨板块访问按 404 处理；草稿同样不可见
-  if (!post.value || !belongsSection(path, section.key) || post.value.draft === true)
+  // 合并集合后文章路径全局唯一，但页面只能展示自己板块下的文章；草稿同样不可见
+  if (!canShowPost(post.value, section.key))
     throw createError({ statusCode: 404, statusMessage: '文章不存在' })
 
   const surround = computed(() =>

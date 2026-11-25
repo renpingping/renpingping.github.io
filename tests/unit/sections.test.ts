@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { belongsSection, navLabelOf, sectionOf, sections } from '~/config/sections'
-import { surroundOf } from '~/utils/posts'
+import { canShowPost, normalizePath, surroundOf } from '~/utils/posts'
 
 describe('板块注册表', () => {
   it('每个板块的 key 互不重复，且都是可以直接当路径段使用的字符串', () => {
@@ -57,5 +57,33 @@ describe('surroundOf', () => {
   it('路径不在列表里时（例如跨板块访问）两侧都为空', () => {
     expect(surroundOf(list, 'not-in-list')).toEqual({ newer: null, older: null })
     expect(surroundOf([], 'a')).toEqual({ newer: null, older: null })
+  })
+})
+
+describe('normalizePath', () => {
+  it('去掉路径末尾的斜杠，根路径保持不变', () => {
+    expect(normalizePath('/blog/day_2026-11-24/')).toBe('/blog/day_2026-11-24')
+    expect(normalizePath('/blog/day_2026-11-24')).toBe('/blog/day_2026-11-24')
+    expect(normalizePath('/a/b///')).toBe('/a/b')
+    expect(normalizePath('/')).toBe('/')
+  })
+})
+
+describe('canShowPost', () => {
+  // 合并集合后文章路径全局唯一，但页面只能展示自己板块下的文章
+  const post = { path: '/blog/day_2026-11-24', draft: false }
+
+  it('属于该板块的已发布文章可以展示', () => {
+    expect(canShowPost(post, 'blog')).toBe(true)
+    expect(canShowPost({ path: '/weekly/2026-11-20' }, 'weekly')).toBe(true)
+    // 没写 draft 字段视为已发布
+    expect(canShowPost({ path: '/blog/day_2026-11-24' }, 'blog')).toBe(true)
+  })
+
+  it('别的板块的文章、草稿、不存在的文章都不能展示', () => {
+    expect(canShowPost(post, 'weekly')).toBe(false)
+    expect(canShowPost({ path: '/weekly/2026-11-20' }, 'blog')).toBe(false)
+    expect(canShowPost({ ...post, draft: true }, 'blog')).toBe(false)
+    expect(canShowPost(null, 'blog')).toBe(false)
   })
 })
