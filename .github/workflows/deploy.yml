@@ -8,6 +8,11 @@ on:
 permissions:
   contents: write
 
+# 同一时刻只允许一个部署：新的推送会取消进行中的旧部署，避免旧构建后完成并覆盖新内容
+concurrency:
+  group: deploy-pages
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
