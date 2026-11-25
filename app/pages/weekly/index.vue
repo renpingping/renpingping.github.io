@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { POST_SUMMARY_FIELDS } from '~/types/post'
+
 const { data: posts } = await useAsyncData('weekly-list', () =>
-  queryCollection('weekly').order('date', 'DESC').all(),
+  queryCollection('weekly').select(...POST_SUMMARY_FIELDS).order('date', 'DESC').all(),
 )
 
 useHead({ title: 'GitHub 周报' })

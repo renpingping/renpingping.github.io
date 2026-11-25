@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import { POST_SUMMARY_FIELDS } from '~/types/post'
+
 const route = useRoute()
 // Vue Router 返回的 params 已解码，切勿再 decodeURIComponent（否则标签含 % 等字符会抛 URIError）
 const tag = computed(() => route.params.tag as string)
 
 const { data: posts } = await useAsyncData(`tag-${tag.value}`, () =>
   Promise.all([
-    queryCollection('blog').order('date', 'DESC').all(),
-    queryCollection('weekly').order('date', 'DESC').all(),
+    queryCollection('blog').select(...POST_SUMMARY_FIELDS).order('date', 'DESC').all(),
+    queryCollection('weekly').select(...POST_SUMMARY_FIELDS).order('date', 'DESC').all(),
   ]).then(([blog, weekly]) =>
     [...blog, ...weekly].sort((a, b) => b.date.localeCompare(a.date)),
   ),

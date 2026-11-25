@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { POST_SUMMARY_FIELDS } from '~/types/post'
+
 const { data: posts } = await useAsyncData('tags-all', () =>
   Promise.all([
-    queryCollection('blog').order('date', 'DESC').all(),
-    queryCollection('weekly').order('date', 'DESC').all(),
+    queryCollection('blog').select(...POST_SUMMARY_FIELDS).order('date', 'DESC').all(),
+    queryCollection('weekly').select(...POST_SUMMARY_FIELDS).order('date', 'DESC').all(),
   ]).then(([blog, weekly]) =>
     [...blog, ...weekly].sort((a, b) => b.date.localeCompare(a.date)),
   ),

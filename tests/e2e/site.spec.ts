@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test'
 import { readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
+import { parse } from 'devalue'
 import { expect, test } from '@playwright/test'
 
 /**
@@ -273,4 +274,35 @@ test('移动端：汉堡菜单可以展开并跳转', async ({ page }) => {
   await expect(page).toHaveURL(/\/gallery\/?$/)
   await expect(link).toHaveCount(0)
   expect(errors).toEqual([])
+})
+
+// Nuxt 序列化页面数据时用了响应式类型的还原器；这里只读取普通数据，原样返回即可
+const identity = (value: unknown) => value
+const payloadRevivers = {
+  ShallowRef: identity,
+  ShallowReactive: identity,
+  Ref: identity,
+  EmptyRef: identity,
+  EmptyShallowRef: identity,
+}
+
+test('列表页数据：只带卡片需要的字段，不携带文章正文', async ({ request }) => {
+  // 页面数据由 devalue 序列化。正文 AST 会让列表页数据随文章数线性膨胀（每篇约 11KB），
+  // 而卡片只需要标题、日期、标签、摘要这几个字段。
+  const pages: [string, string][] = [
+    ['/', 'home-posts'],
+    ['/blog', 'blog-list'],
+    ['/weekly', 'weekly-list'],
+    ['/tags', 'tags-all'],
+    [`/tags/${encodeURIComponent('技术热读')}`, 'tag-技术热读'],
+  ]
+  for (const [path, key] of pages) {
+    const response = await request.get(`${path === '/' ? '' : path}/_payload.json`)
+    expect(response.status(), path).toBe(200)
+    const payload = parse(await response.text(), payloadRevivers) as { data: Record<string, unknown> }
+    const items = payload.data[key]
+    expect(Array.isArray(items), key).toBe(true)
+    for (const item of items as Record<string, unknown>[])
+      expect(item, `${key} → ${String(item.path)}`).not.toHaveProperty('body')
+  }
 })

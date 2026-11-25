@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { POST_SUMMARY_FIELDS } from '~/types/post'
+
 const { data: posts } = await useAsyncData('blog-list', () =>
-  queryCollection('blog').order('date', 'DESC').all(),
+  queryCollection('blog').select(...POST_SUMMARY_FIELDS).order('date', 'DESC').all(),
 )
 
 const { activeTag, allTags, filtered } = useTagFilter(posts)

@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { POST_SUMMARY_FIELDS } from '~/types/post'
+
 const config = useAppConfig()
 
 const { data: posts } = await useAsyncData('home-posts', () =>
-  queryCollection('blog').order('date', 'DESC').limit(4).all(),
+  queryCollection('blog').select(...POST_SUMMARY_FIELDS).order('date', 'DESC').limit(4).all(),
 )
 const { data: projects } = await useAsyncData('home-projects', () =>
   queryCollection('projects').order('date', 'DESC').all(),
