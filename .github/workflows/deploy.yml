@@ -14,7 +14,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # 先过 CI：lint、类型检查、单元测试、依赖审计门禁、构建与端到端测试，任何一项失败都不会部署。
+  # 文章机器人直接推 source，这道门禁是它的产出上线前唯一的检查。
+  validate:
+    uses: ./.github/workflows/ci.yml
+
   deploy:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
