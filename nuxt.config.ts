@@ -29,6 +29,10 @@ export default defineNuxtConfig({
         },
       },
     },
+    // 用 Node 内置的 node:sqlite 读写内容数据库（需 Node ≥ 22.5），不再依赖需要编译的 better-sqlite3
+    experimental: {
+      sqliteConnector: 'native',
+    },
   },
 
   app: {

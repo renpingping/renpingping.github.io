@@ -27,7 +27,7 @@ npm run build        # SSR 构建
 npm run preview      # 预览构建产物（nitro server）
 ```
 
-> 需要 Node.js ≥ 22（与 CI 保持一致）。
+> 需要 Node.js 26：根目录的 `.nvmrc` 固定了主版本（用 nvm 的话 `nvm use` 即可），CI 通过 `node-version-file` 读取同一个文件，保证本地与线上的构建环境一致。内容数据库使用 Node 内置的 SQLite，不再依赖需要编译的原生模块。
 >
 > 本地想预览「Pages 上真实部署的效果」，推荐生成后用任意静态服务器预览产物：
 >
