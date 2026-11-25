@@ -1,0 +1,25 @@
+# 依赖自动更新：每周一检查 npm 依赖与 GitHub Actions 的新版本，向默认分支（source）提 PR。
+# minor / patch 合并为一个 PR；major 更新单独提 PR，需要人工评估后合并。
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      npm-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    commit-message:
+      prefix: build
+      include: scope
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: ci
