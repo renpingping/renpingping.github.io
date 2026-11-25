@@ -15,7 +15,7 @@
 | 样式 | Tailwind CSS v4（CSS-first，`@theme` / `@custom-variant`） |
 | 主题 | `@nuxtjs/color-mode`（亮 / 暗 / 跟随系统，`html.dark`） |
 | 代码高亮 | Shiki 双主题（github-light / github-dark） |
-| 背景动效 | 原生 Canvas 分支生长（全站）+ p5i 噪声流场（文章详情页），均移植自 [antfu/100](https://github.com/antfu/100) |
+| 背景动效 | 原生 Canvas：分支生长（全站）与噪声流场（长文详情页），均移植自 [antfu/100](https://github.com/antfu/100)；系统开启「减少动态效果」时只呈现静止画面 |
 
 ## 快速开始
 
@@ -201,7 +201,7 @@ date: "2026-11-18"
 - 全站正文字体为自制手写字体 **MyHand**（`public/fonts/MyHand-Regular.woff2` 自托管，`@theme` 中回退到 PingFang SC 等系统中文字体）。
 - 暗色模式基于 `html.dark` 类；Tailwind v4 通过 `@custom-variant dark` 适配，代码高亮通过 `html.dark .shiki` 切换 Shiki 双主题变量。
 - 正文排版集中在 `app/assets/css/main.css` 的 `.prose-ther`；每日热读卡片样式在 `daily-card.css`。
-- 全站背景为 Canvas「分支生长」（进入页面播放一次），长文详情页（`/blog/*`、`/weekly/*`）切换为 p5i「噪声流场」，见 `app/components/ui/`。
+- 全站背景为 Canvas「分支生长」（进入页面播放一次），长文详情页（`/blog/*`、`/weekly/*`）切换为「噪声流场」，见 `app/components/ui/`。两者都是原生 Canvas 实现，不依赖第三方绘图库；画布的公共逻辑在 `useCanvasSurface`。
 
 ## 部署
 

@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test'
-import { readdirSync, readFileSync } from 'node:fs'
+import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { parse } from 'devalue'
 import { expect, test } from '@playwright/test'
@@ -305,4 +305,62 @@ test('列表页数据：只带卡片需要的字段，不携带文章正文', as
     for (const item of items as Record<string, unknown>[])
       expect(item, `${key} → ${String(item.path)}`).not.toHaveProperty('body')
   }
+})
+
+test('构建产物：没有超过 500KB 的脚本块', async () => {
+  // 500KB 是构建工具自身的告警线。曾经一个动画库打包后就有 1MB，而且被全站每个页面预取
+  const dir = resolve(process.cwd(), '.output/public/_nuxt')
+  const tooBig = readdirSync(dir)
+    .filter(file => file.endsWith('.js'))
+    .filter(file => statSync(join(dir, file)).size > 500 * 1024)
+  expect(tooBig).toEqual([])
+})
+
+/** 背景画布是否在变化：间隔 700ms 对整幅画布采样两次，同时返回画面是否有内容 */
+async function sampleBackground(page: Page) {
+  return await page.evaluate(() => new Promise<{ painted: boolean, changed: boolean }>((resolve) => {
+    const canvas = document.querySelector('canvas')
+    const ctx = canvas?.getContext('2d')
+    if (!canvas || !ctx)
+      return resolve({ painted: false, changed: false })
+    const sum = () => {
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+      let total = 0
+      for (let i = 0; i < data.length; i += 4)
+        total += data[i] + data[i + 3]
+      return total
+    }
+    const first = sum()
+    setTimeout(() => {
+      const second = sum()
+      resolve({ painted: first + second > 0, changed: second !== first })
+    }, 700)
+  }))
+}
+
+test.describe('系统开启「减少动态效果」时', () => {
+  test.use({ reducedMotion: 'reduce' })
+
+  test('文章页的流场背景只画一帧，保持静止', async ({ page }) => {
+    await open(page, `/blog/${blog[0]!.slug}`)
+    expect(await sampleBackground(page)).toEqual({ painted: true, changed: false })
+  })
+
+  test('首页的分支背景直接呈现最终画面，不播放生长动画', async ({ page }) => {
+    await open(page, '/')
+    expect(await sampleBackground(page)).toEqual({ painted: true, changed: false })
+  })
+})
+
+test.describe('高分屏上', () => {
+  test.use({ deviceScaleFactor: 3 })
+
+  test('背景画布的像素比封顶为 2', async ({ page }) => {
+    await open(page, `/blog/${blog[0]!.slug}`)
+    const size = await page.evaluate(() => {
+      const canvas = document.querySelector('canvas')
+      return { buffer: canvas?.width ?? 0, viewport: window.innerWidth }
+    })
+    expect(size.buffer).toBe(size.viewport * 2)
+  })
 })
