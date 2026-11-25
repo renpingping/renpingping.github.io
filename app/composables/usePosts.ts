@@ -1,16 +1,26 @@
-import type { Ref } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
 import { computed } from 'vue'
 import type { Section } from '~/config/sections'
-import { belongsSection, sections } from '~/config/sections'
+import { belongsSection, getSection, pageSizeOf, sections } from '~/config/sections'
 import type { PostSummary } from '~/types/post'
 import { POST_SUMMARY_FIELDS } from '~/types/post'
+import { pageCount } from '~/utils/pagination'
 import { surroundOf } from '~/utils/posts'
 
 const HOME_POST_COUNT = 4
 
+/** 文章摘要列表：数据尚未取到时为 null 或 undefined，调用方用 `?? []` 兜底 */
+type PostListRef = Ref<PostSummary[] | null | undefined>
+
 /** 页面里直接使用的 asyncData 结果 */
 interface AsyncPosts {
-  data: Ref<PostSummary[] | null>
+  data: PostListRef
+}
+
+/** 列表页的一页数据 */
+interface PagedPosts {
+  data: PostListRef
+  totalPages: ComputedRef<number>
 }
 
 /** 某个板块内已发布文章（不含草稿）的摘要，按日期从新到旧 */
@@ -22,9 +32,42 @@ function sectionQuery(section: Section) {
     .order('date', 'DESC')
 }
 
-/** 某个板块全部已发布文章的摘要（不含草稿与正文） */
-export function useSectionPosts(section: Section): AsyncPosts {
-  return useAsyncData(`${section.key}-list`, () => sectionQuery(section).all())
+/** 该板块全部已发布文章的摘要（不含草稿与正文），按日期从新到旧 */
+function useAllSectionPosts(section: Section): AsyncPosts {
+  return useAsyncData(`${section.key}-all`, () => sectionQuery(section).all())
+}
+
+/** 某个板块某一页的已发布文章摘要与总页数。在数据层分页：只取这一页需要的条数 */
+export async function useSectionPosts(section: Section, page: number): Promise<PagedPosts> {
+  const size = pageSizeOf(section)
+  // Nuxt 的 composable 必须在第一个 await 之前同步调用
+  const total = useAsyncData(`${section.key}-count`, () => sectionQuery(section).count())
+  const list = useAsyncData(`${section.key}-list-${page}`, () =>
+    sectionQuery(section).skip((page - 1) * size).limit(size).all(),
+  )
+  await Promise.all([total, list])
+  return { data: list.data, totalPages: computed(() => pageCount(total.data.value ?? 0, size)) }
+}
+
+/** 列表首页（/<板块>）的数据 */
+export async function useSectionFirstPage(key: string): Promise<PagedPosts> {
+  return useSectionPosts(getSection(key), 1)
+}
+
+/**
+ * 分页路由 /<板块>/page/<页码> 的数据。第 1 页重定向到列表首页（避免同一内容两个地址），越界的页码返回 404。
+ */
+export async function useSectionPage(key: string): Promise<PagedPosts> {
+  const section = getSection(key)
+  const requested = Number.parseInt(String(useRoute().params.page ?? ''), 10)
+  // 必须在任何 await 之前调用
+  if (requested === 1)
+    return navigateTo(`/${section.key}`, { redirectCode: 301 }) as never
+
+  const posts = await useSectionPosts(section, Number.isInteger(requested) && requested >= 1 ? requested : 1)
+  if (!Number.isInteger(requested) || requested < 1 || requested > posts.totalPages.value)
+    throw createError({ statusCode: 404, statusMessage: '页码不存在' })
+  return posts
 }
 
 /** 全部板块已发布文章的摘要（不含草稿与正文），按日期从新到旧。数据键由调用方指定，每个页面各自预渲染 */
@@ -62,7 +105,7 @@ export async function usePostPage(section: Section) {
   const postFetch = useAsyncData(path, () =>
     queryCollection('posts').path(path).first(),
   )
-  const { data: siblings } = useSectionPosts(section)
+  const { data: siblings } = useAllSectionPosts(section)
 
   const { data: post } = await postFetch
 

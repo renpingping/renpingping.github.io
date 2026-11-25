@@ -2,7 +2,7 @@
 import { getSection } from '~/config/sections'
 
 const section = getSection('blog')
-const { data: posts } = await useSectionPosts(section)
+const { data: posts, totalPages } = await useSectionFirstPage('blog')
 
 useHead({ title: section.title })
 </script>
@@ -11,5 +11,7 @@ useHead({ title: section.title })
   <PostList
     :section="section"
     :posts="posts ?? []"
+    :page="1"
+    :total-pages="totalPages"
   />
 </template>

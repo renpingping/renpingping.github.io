@@ -2,6 +2,9 @@
  * 板块注册表：所有「文章类」内容的差异都描述在这里，页面与组件只负责按注册表渲染。
  * 新增一个板块只需三步：在 content/ 下建一级子目录放 Markdown、在这里加一条、建两个薄封装页面。
  */
+/** 列表页默认每页条数 */
+export const DEFAULT_PAGE_SIZE = 20
+
 export interface Section {
   /** 目录名，同时是路由与路径前缀：content/<key>/a.md → /<key>/a */
   key: string
@@ -15,8 +18,8 @@ export interface Section {
   wideTags?: string[]
   /** 不论标签如何都拉宽正文、不显示目录 */
   wide?: boolean
-  /** 列表页是否显示标签筛选条 */
-  tagFilter?: boolean
+  /** 列表页每页条数，不填用 DEFAULT_PAGE_SIZE */
+  pageSize?: number
   /** 是否进入首页的「最新文章」 */
   homeFeed?: boolean
   /** 正文末尾是否显示上一篇 / 下一篇（同一板块内按日期相邻） */
@@ -32,7 +35,6 @@ export const sections: readonly Section[] = [
     description: '记录技术、工具与折腾的痕迹',
     // 每日技术热读是卡片列表，自带分类导航：不需要侧栏目录，正文拉宽后卡片更舒展
     wideTags: ['技术热读'],
-    tagFilter: true,
     homeFeed: true,
     surround: true,
   },
@@ -50,6 +52,10 @@ const byKey = new Map(sections.map(section => [section.key, section]))
 
 /** 一级目录 + 文件名，可带尾斜杠：/blog/day_2026-11-25 */
 const ARTICLE_PATH = /^\/([^/]+)\/[^/]+\/?$/
+
+export function pageSizeOf(section: Section): number {
+  return section.pageSize ?? DEFAULT_PAGE_SIZE
+}
 
 export function navLabelOf(section: Section): string {
   return section.navLabel ?? section.title

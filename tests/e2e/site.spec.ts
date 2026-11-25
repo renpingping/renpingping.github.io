@@ -3,6 +3,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { parse } from 'devalue'
 import { expect, test } from '@playwright/test'
+import { DEFAULT_PAGE_SIZE, getSection, pageSizeOf } from '../../app/config/sections'
 
 /**
  * 全站端到端测试，跑在 `nuxt generate` 的静态产物上。
@@ -69,7 +70,11 @@ function trackErrors(page: Page) {
     if (msg.type() === 'error')
       errors.push(`console: ${msg.text()}`)
   })
-  page.on('requestfailed', req => errors.push(`requestfailed: ${req.url()}`))
+  page.on('requestfailed', (req) => {
+    // 页面跳转时，上一页还没完成的请求会被浏览器中止，这不算错误
+    if (req.failure()?.errorText !== 'net::ERR_ABORTED')
+      errors.push(`requestfailed: ${req.url()}`)
+  })
   return errors
 }
 
@@ -87,18 +92,80 @@ test('首页：标题、三个内容区块与导航', async ({ page }) => {
   expect(errors).toEqual([])
 })
 
-test('文章列表：列出全部文章，标签筛选后可以还原', async ({ page }) => {
+// 每页条数来自板块注册表；下面的用例对「只有一页」和「有很多页」都成立
+const pageSize = (key: 'blog' | 'weekly') => pageSizeOf(getSection(key))
+const TAG_PAGE_SIZE = DEFAULT_PAGE_SIZE
+
+/** 从列表首页开始顺着「下一页」走，收集每一页上的文章链接 */
+async function collectAcrossPages(page: Page, section: 'blog' | 'weekly') {
+  await open(page, `/${section}`)
+  const seen: string[] = []
+  const cards = page.locator(`main a[href^="/${section}/"]:not([href^="/${section}/page/"])`)
+  // 防止分页链接成环时无限循环
+  for (let hops = 0; hops < 50; hops++) {
+    seen.push(...(await cards.evaluateAll(links => links.map(link => link.getAttribute('href') ?? ''))))
+    const next = page.getByRole('link', { name: '下一页' })
+    if ((await next.count()) === 0)
+      return seen
+    const target = (await next.getAttribute('href')) ?? ''
+    await next.click()
+    await page.waitForURL(url => url.pathname === target)
+  }
+  return seen
+}
+
+test('文章列表：首页只显示第一页，顺着「下一页」能走遍全部文章', async ({ page }) => {
   const errors = trackErrors(page)
+  const published = blog.filter(post => !post.draft).map(post => post.path)
+
   await open(page, '/blog')
   await expect(page).toHaveTitle(/文章/)
-  const cards = page.locator('main a[href^="/blog/"]')
-  await expect(cards).toHaveCount(blog.length)
+  const cards = page.locator('main a[href^="/blog/"]:not([href^="/blog/page/"])')
+  await expect(cards).toHaveCount(Math.min(pageSize('blog'), published.length))
+  // 超过一页时才出现「下一页」
+  await expect(page.getByRole('link', { name: '下一页' })).toHaveCount(published.length > pageSize('blog') ? 1 : 0)
 
-  const tagged = blog.filter(post => post.tags.includes('技术热读')).length
-  await page.locator('main').getByRole('button', { name: /^技术热读 \(\d+\)$/ }).click()
-  await expect(cards).toHaveCount(tagged)
-  await page.locator('main').getByRole('button', { name: '全部', exact: true }).click()
-  await expect(cards).toHaveCount(blog.length)
+  expect(await collectAcrossPages(page, 'blog')).toEqual(published)
+  expect(errors).toEqual([])
+})
+
+test('分页：后面几页的条数与当前页标记都正确', async ({ page }) => {
+  const size = pageSize('blog')
+  const published = blog.filter(post => !post.draft).map(post => post.path)
+  const last = Math.ceil(published.length / size)
+  test.skip(last < 2, '当前文章数不足两页，无法验证多页')
+  const cards = page.locator('main a[href^="/blog/"]:not([href^="/blog/page/"])')
+  const current = page.locator('nav[aria-label="分页"] [aria-current="page"]')
+
+  // 最末一页只有剩余的那几篇，并且没有「下一页」
+  await open(page, `/blog/page/${last}`)
+  await expect(cards).toHaveCount(published.length - (last - 1) * size)
+  await expect(current).toHaveText(String(last))
+  await expect(page.getByRole('link', { name: '下一页' })).toHaveCount(0)
+
+  if (last >= 3) {
+    await page.getByRole('link', { name: '← 上一页' }).click()
+    await page.waitForURL(url => url.pathname === `/blog/page/${last - 1}`)
+    await expect(cards).toHaveCount(size)
+    await expect(current).toHaveText(String(last - 1))
+  }
+})
+
+test('标签页：按 ?page= 分页，越界的页码停在最后一页', async ({ page }) => {
+  const errors = trackErrors(page)
+  const tag = '技术热读'
+  const expected = blog.filter(post => !post.draft && post.tags.includes(tag)).map(post => post.path)
+  const lastPage = Math.max(1, Math.ceil(expected.length / TAG_PAGE_SIZE))
+  const cards = page.locator('main a[href^="/blog/"]')
+
+  await open(page, `/tags/${encodeURIComponent(tag)}?page=999`)
+  await expect(cards).toHaveCount(expected.length - (lastPage - 1) * TAG_PAGE_SIZE)
+
+  if (lastPage > 1) {
+    await page.getByRole('link', { name: '← 上一页' }).click()
+    await expect(page).toHaveURL(new RegExp(`page=${lastPage - 1}`))
+    await expect(cards).toHaveCount(TAG_PAGE_SIZE)
+  }
   expect(errors).toEqual([])
 })
 
@@ -296,8 +363,8 @@ test('列表页数据：只带卡片需要的字段，不携带文章正文', as
   // 而卡片只需要标题、日期、标签、摘要这几个字段。
   const pages: [string, string][] = [
     ['/', 'home-posts'],
-    ['/blog', 'blog-list'],
-    ['/weekly', 'weekly-list'],
+    ['/blog', 'blog-list-1'],
+    ['/weekly', 'weekly-list-1'],
     ['/tags', 'tags-all'],
     [`/tags/${encodeURIComponent('技术热读')}`, 'tag-技术热读'],
   ]
@@ -318,9 +385,10 @@ test('列表数据：每个列表恰好包含应有的已发布文章，草稿�
     .filter(post => !post.draft)
     .sort((a, b) => b.date.localeCompare(a.date))
     .map(post => post.path)
+  // 板块列表页在数据层分页：首页的数据只含第一页，所以条数不会超过每页条数
   const expected: [string, string, string[]][] = [
-    ['/blog', 'blog-list', published('blog')],
-    ['/weekly', 'weekly-list', published('weekly')],
+    ['/blog', 'blog-list-1', published('blog').slice(0, pageSize('blog'))],
+    ['/weekly', 'weekly-list-1', published('weekly').slice(0, pageSize('weekly'))],
     ['/tags', 'tags-all', everything],
   ]
   for (const [path, key, paths] of expected) {
