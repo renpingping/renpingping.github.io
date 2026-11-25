@@ -1,14 +1,7 @@
 <script setup lang="ts">
-const props = defineProps<{
-  post: {
-    path: string
-    title: string
-    description?: string
-    date: string
-    tags: string[]
-    cover?: string
-  }
-}>()
+import type { PostSummary } from '~/types/post'
+
+defineProps<{ post: PostSummary }>()
 
 const { format } = useFormatDate()
 </script>

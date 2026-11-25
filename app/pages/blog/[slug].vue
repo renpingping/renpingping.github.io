@@ -9,8 +9,9 @@ if (!post.value) {
   throw createError({ statusCode: 404, statusMessage: '文章不存在' })
 }
 
+// 第 3 个参数是 { fields }：只取上下篇需要的字段
 const { data: surround } = await useAsyncData(`${route.path}-surround`, () =>
-  queryCollectionItemSurroundings('blog', route.path, ['title', 'description']).order('date', 'DESC'),
+  queryCollectionItemSurroundings('blog', route.path, { fields: ['path', 'title', 'description'] }).order('date', 'DESC'),
 )
 
 const prev = computed(() => surround.value?.[0]?.path ? surround.value[0] : null)

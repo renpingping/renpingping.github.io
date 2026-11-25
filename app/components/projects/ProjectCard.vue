@@ -1,17 +1,7 @@
 <script setup lang="ts">
-defineProps<{
-  project: {
-    stem: string
-    title: string
-    description: string
-    tech: string[]
-    link?: string
-    repo?: string
-    cover?: string
-    date: string
-    featured: boolean
-  }
-}>()
+import type { ProjectsCollectionItem } from '@nuxt/content'
+
+defineProps<{ project: ProjectsCollectionItem }>()
 
 const { format } = useFormatDate()
 

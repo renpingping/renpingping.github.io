@@ -9,6 +9,9 @@ const emit = defineEmits<{
   'update:index': [index: number]
 }>()
 
+// 下标越界时不渲染图片，而不是让模板里的 images[index] 直接抛错
+const current = computed(() => props.images[props.index])
+
 function prev() {
   if (props.index > 0) emit('update:index', props.index - 1)
 }
@@ -51,8 +54,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
       </button>
 
       <img
-        :src="images[index].src"
-        :alt="images[index].alt ?? ''"
+        v-if="current"
+        :src="current.src"
+        :alt="current.alt ?? ''"
         class="max-h-[85vh] max-w-full rounded-lg object-contain"
       >
 

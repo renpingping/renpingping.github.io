@@ -1,15 +1,7 @@
 <script setup lang="ts">
-defineProps<{
-  item: {
-    stem: string
-    title: string
-    url: string
-    source?: string
-    tags: string[]
-    note?: string
-    date: string
-  }
-}>()
+import type { CollectionsCollectionItem } from '@nuxt/content'
+
+defineProps<{ item: CollectionsCollectionItem }>()
 
 const { format } = useFormatDate()
 </script>
