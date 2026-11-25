@@ -1,15 +1,22 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
-  compatibilityDate: '2026-11-01',
-  modules: ['@nuxt/content', '@nuxtjs/color-mode'],
-  css: ['~/assets/css/main.css', '~/assets/css/daily-card.css'],
+  modules: ['@nuxt/content', '@nuxtjs/color-mode', '@nuxt/eslint'],
 
   components: [{ path: '~/components', pathPrefix: false }],
 
-  vite: {
-    plugins: [tailwindcss()],
+  app: {
+    head: {
+      htmlAttrs: { lang: 'zh-CN' },
+      meta: [
+        { name: 'description', content: 'renpingping 的个人博客与作品展示' },
+        { name: 'author', content: 'renpingping' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      ],
+      link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+    },
   },
+  css: ['~/assets/css/main.css', '~/assets/css/daily-card.css'],
 
   colorMode: {
     classSuffix: '',
@@ -34,18 +41,7 @@ export default defineNuxtConfig({
       sqliteConnector: 'native',
     },
   },
-
-  app: {
-    head: {
-      htmlAttrs: { lang: 'zh-CN' },
-      meta: [
-        { name: 'description', content: 'renpingping 的个人博客与作品展示' },
-        { name: 'author', content: 'renpingping' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      ],
-      link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }],
-    },
-  },
+  compatibilityDate: '2026-11-01',
 
   nitro: {
     prerender: {
@@ -53,6 +49,16 @@ export default defineNuxtConfig({
       routes: ['/'],
       failOnError: true,
       ignore: ['/ZONE'],
+    },
+  },
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
+  // stylistic: true 启用 ESLint Stylistic，统一缩进、引号、分号等格式；项目不另装 Prettier
+  eslint: {
+    config: {
+      stylistic: true,
     },
   },
 })

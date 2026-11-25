@@ -1,0 +1,18 @@
+# 编辑器基础约定，与 ESLint Stylistic 的格式保持一致
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+# 由 Nuxt 在安装与构建时生成，属于依赖产物而非源码
+[{**/.nuxt/**,**/.output/**,**/node_modules/**}]
+insert_final_newline = false
+trim_trailing_whitespace = false
