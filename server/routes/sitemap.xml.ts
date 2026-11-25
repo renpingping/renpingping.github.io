@@ -9,8 +9,6 @@ import { escapeXml } from '../../shared/utils/xml'
 /** 不随内容变化、始终存在的页面 */
 const STATIC_PATHS = [
   '/',
-  '/blog/',
-  '/weekly/',
   '/projects/',
   '/gallery/',
   '/collections/',
@@ -30,7 +28,8 @@ export default defineEventHandler(async (event) => {
   }
   // 标签页只展示文章，所以这里只收文章上的标签；收藏的标签没有对应页面，不能列进来
 
-  const paths = [...STATIC_PATHS]
+  // 各板块的列表首页与功能页
+  const paths = [...STATIC_PATHS, ...sections.map(section => `/${section.key}/`)]
   for (const section of sections) {
     const total = posts.filter(post => belongsSection(post.path, section.key)).length
     for (let page = 2; page <= pageCount(total, pageSizeOf(section)); page++)
