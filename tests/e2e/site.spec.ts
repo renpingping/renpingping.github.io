@@ -584,3 +584,32 @@ test('灯箱：是对话框、焦点不跑到背后、背景不滚动，关闭�
   expect(await page.evaluate(() => document.activeElement?.querySelector('img') !== null || document.activeElement?.tagName === 'BUTTON')).toBe(true)
   expect(await page.evaluate(() => document.body.style.overflow)).toBe('')
 })
+
+/** 等页面滚动停止：连续两次采样位置不变视为停稳 */
+async function waitForScrollToSettle(page: Page) {
+  let previous = -1
+  for (let sample = 0; sample < 60; sample++) {
+    const current = await page.evaluate(() => Math.round(window.scrollY))
+    if (current === previous)
+      return
+    previous = current
+    await page.waitForTimeout(100)
+  }
+}
+
+test('文内锚点：跳转后目标标题完整露在吸顶导航栏下方', async ({ page }) => {
+  await open(page, `/blog/${blog[0]!.slug}`)
+  // 「今日导航」里的分类链接
+  const anchor = page.locator('.prose-ther a[href^="#"]').first()
+  // 渲染出的 href 是百分号编码的，查元素前要先解码
+  const id = decodeURIComponent((await anchor.getAttribute('href'))!.slice(1))
+  await anchor.click()
+  // 必须先等平滑滚动停稳再断言：刚点击时标题还在原处（本来就在导航栏下方），立刻检查会误判为通过
+  await waitForScrollToSettle(page)
+  const gapBelowHeader = () => page.evaluate((targetId) => {
+    const heading = document.getElementById(targetId)
+    const header = document.querySelector('header')
+    return Math.round(heading.getBoundingClientRect().top - header.getBoundingClientRect().height)
+  }, id)
+  expect(await gapBelowHeader(), '标题顶部相对导航栏底部的距离').toBeGreaterThanOrEqual(0)
+})

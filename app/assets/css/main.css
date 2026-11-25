@@ -70,6 +70,10 @@ html.dark .shiki span {
 .prose-ther {
   @apply rounded-2xl bg-zinc-50/80 p-6 leading-relaxed shadow-xs backdrop-blur-[2px] sm:p-8 dark:bg-zinc-900/70;
 }
+/* 点击目录或文内锚点跳转后，标题要完整露在吸顶导航栏（56px）下方 */
+.prose-ther :is(h1, h2, h3, h4, h5, h6) {
+  scroll-margin-top: 5rem;
+}
 .prose-ther h2 {
   @apply mt-10 mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100;
 }

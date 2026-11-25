@@ -217,5 +217,10 @@ date: "2026-11-18"
 ## 已知约定
 
 - `dist` 是指向 `.output/public` 的软链接，便于本地静态预览，已被 `.gitignore` 忽略。
-- `public/ZONE` 内是 2016 年前后的早期静态作品（jQuery 时代），保留用于展示，不参与预渲染爬取。
+- `public/ZONE` 内是早期静态作品（jQuery 时代），作为冻结归档保留用于展示：不参与预渲染爬取、不经过构建与 lint，也不会再更新。
+  - `bigdataNetwork3_demo/`（大数据可视化大屏）：jQuery 1.8.3、jQuery 1.10.2（与 jQuery UI 打包在同一文件）
+  - `bigdatalogin/`（大屏登录页）：jQuery 1.8.0
+  - `testHTML/`（前端试验田）：无第三方库
+
+  这些版本的 jQuery 存在公开已知漏洞（XSS、原型污染）。页面是纯展示、不处理用户输入，实际风险低；请不要在其中加入处理用户数据的逻辑，需要新做演示时写在 `app/pages/demos/` 下。
 - 旧 Hexo 博客的外链已随文章迁移处理；若后续需要重定向旧地址，可在 `app/error.vue` 中按路径映射。
