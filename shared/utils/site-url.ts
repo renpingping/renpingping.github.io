@@ -11,18 +11,22 @@ const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'O
 export function toSiteUrl(path: string): string {
   const [pathname = '/', search = ''] = path.split('?')
   const normalized = pathname === '/' ? '/' : `${pathname.replace(/\/+$/, '')}/`
-  // 路由给出的路径可能已经是编码过的，先解码再逐段编码，保证同一地址只会有一种写法
-  const encoded = decodePathname(normalized).split('/').map(segment => (segment ? encodeURI(segment) : '')).join('/')
+  // 路由给出的路径可能已经是编码过的。逐段先解码再编码，保证同一地址只会有一种写法。
+  // 必须用 decodeURIComponent：decodeURI 不解码 + / # & 等地址保留字符，它们随后会被再编码一次。
+  // 先按 / 切段再解码，这样标签里的斜杠（%2F）不会被当成路径分隔符。
+  const encoded = normalized.split('/').map(encodeSegment).join('/')
   return `${SITE.url}${encoded}${search ? `?${search}` : ''}`
 }
 
-function decodePathname(pathname: string): string {
+function encodeSegment(segment: string): string {
+  if (!segment)
+    return ''
   try {
-    return decodeURI(pathname)
+    return encodeURIComponent(decodeURIComponent(segment))
   }
   catch {
-    // 路径里有不成对的 %，不是合法的编码，按原样处理
-    return pathname
+    // 段里有不成对的 %，不是合法的编码，按原样编码
+    return encodeURIComponent(segment)
   }
 }
 

@@ -37,6 +37,14 @@ describe('toSiteUrl', () => {
     expect(toSiteUrl('/tags/GitHub周报')).toBe(expected)
   })
 
+  it('标签里含 + / # & 这类地址保留字符时不会重复编码', () => {
+    // 路由给出的路径里它们是编码过的（%2B、%2F…），decodeURI 不会解码它们，必须逐段用 decodeURIComponent
+    expect(toSiteUrl('/tags/C%2B%2B')).toBe('https://renpingping.github.io/tags/C%2B%2B/')
+    expect(toSiteUrl('/tags/C++')).toBe('https://renpingping.github.io/tags/C%2B%2B/')
+    expect(toSiteUrl('/tags/a%2Fb')).toBe('https://renpingping.github.io/tags/a%2Fb/')
+    expect(toSiteUrl('/tags/%E8%AE%BE%E8%AE%A1%26%E5%BC%80%E5%8F%91')).toBe('https://renpingping.github.io/tags/%E8%AE%BE%E8%AE%A1%26%E5%BC%80%E5%8F%91/')
+  })
+
   it('路径里有不成对的 % 时不抛错', () => {
     expect(toSiteUrl('/tags/100%')).toBe('https://renpingping.github.io/tags/100%25/')
   })
