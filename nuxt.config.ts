@@ -1,4 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
+import { SITE } from './shared/site'
 
 export default defineNuxtConfig({
   modules: ['@nuxt/content', '@nuxtjs/color-mode', '@nuxt/eslint'],
@@ -7,10 +8,10 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      htmlAttrs: { lang: 'zh-CN' },
+      htmlAttrs: { lang: SITE.language },
       meta: [
-        { name: 'description', content: 'renpingping 的个人博客与作品展示' },
-        { name: 'author', content: 'renpingping' },
+        { name: 'description', content: SITE.description },
+        { name: 'author', content: SITE.author },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       ],
       link: [{ rel: 'icon', type: 'image/png', href: '/favicon.png' }],
@@ -46,7 +47,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ['/'],
+      routes: ['/', '/sitemap.xml', '/rss.xml'],
       failOnError: true,
       ignore: ['/ZONE'],
     },

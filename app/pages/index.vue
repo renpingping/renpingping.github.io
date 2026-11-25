@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const config = useAppConfig()
 
+// 标题只用站点名，描述与 canonical 取默认值
+usePageSeo(() => ({ path: '/' }))
+
 const { data: posts } = await useHomePosts()
 const { data: projects } = await useAsyncData('home-projects', () =>
   queryCollection('projects').order('date', 'DESC').all(),

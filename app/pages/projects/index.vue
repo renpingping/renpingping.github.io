@@ -8,7 +8,7 @@ const sorted = computed(() => {
   return [...list.filter(p => p.featured), ...list.filter(p => !p.featured)]
 })
 
-useHead({ title: 'Demo' })
+usePageSeo(() => ({ title: 'Demo', description: '做过的项目与 Demo' }))
 </script>
 
 <template>

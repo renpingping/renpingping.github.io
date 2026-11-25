@@ -4,7 +4,7 @@ import { getSection } from '~/config/sections'
 const section = getSection('blog')
 const { data: posts, totalPages } = await useSectionFirstPage('blog')
 
-useHead({ title: section.title })
+usePageSeo(() => ({ title: section.title, description: section.description, path: `/${section.key}` }))
 </script>
 
 <template>

@@ -82,7 +82,7 @@ function flip(card: Card) {
   }
 }
 
-useHead({ title: '记忆翻牌' })
+usePageSeo(() => ({ title: '记忆翻牌', description: 'Vue 3 组合式 API 实现的记忆翻牌小游戏，含计步与计时' }))
 </script>
 
 <template>

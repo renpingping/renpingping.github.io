@@ -15,7 +15,11 @@ if (!album.value) {
 
 const lightboxIndex = ref<number | null>(null)
 
-useHead({ title: album.value.title })
+usePageSeo(() => ({
+  title: album.value?.title,
+  description: album.value?.description,
+  path: `/gallery/${route.params.album}`,
+}))
 </script>
 
 <template>

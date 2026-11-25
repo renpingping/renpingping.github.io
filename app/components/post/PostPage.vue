@@ -11,11 +11,13 @@ const isWide = computed(() =>
   || (post.value?.tags ?? []).some(tag => props.section.wideTags?.includes(tag)),
 )
 
-// 标题与描述用 getter 保持响应式：上一篇/下一篇是同一路由的参数变化，组件不会重新执行 setup
-useHead({
-  title: () => post.value?.title ?? '',
-  meta: [{ name: 'description', content: () => post.value?.description ?? '' }],
-})
+// 标题、描述与 canonical 跟着文章走：上一篇/下一篇是同一路由的参数变化，组件不会重新执行 setup
+usePageSeo(() => ({
+  title: post.value?.title,
+  description: post.value?.description,
+  path: post.value?.path,
+  type: 'article',
+}))
 </script>
 
 <template>

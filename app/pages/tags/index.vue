@@ -3,7 +3,7 @@ const { data: posts } = await useAllPosts('tags-all')
 
 const { allTags: tags } = useTagFilter(posts)
 
-useHead({ title: '标签' })
+usePageSeo(() => ({ title: '标签', description: '文章与收藏的标签索引' }))
 </script>
 
 <template>

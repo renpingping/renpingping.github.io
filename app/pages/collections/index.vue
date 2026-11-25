@@ -5,7 +5,7 @@ const { data: items } = await useAsyncData('collections-list', () =>
 
 const { activeTag, allTags, filtered } = useTagFilter(items)
 
-useHead({ title: '收藏' })
+usePageSeo(() => ({ title: '收藏', description: '读过并想留住的好文章与好资源' }))
 </script>
 
 <template>

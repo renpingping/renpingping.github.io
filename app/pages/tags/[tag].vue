@@ -20,7 +20,10 @@ const visible = computed(() =>
 )
 const pageHref = (target: number) => ({ query: { ...route.query, page: target === 1 ? undefined : String(target) } })
 
-useHead({ title: () => `标签：${tag.value}` })
+usePageSeo(() => ({
+  title: `标签：${tag.value}`,
+  description: `带有「${tag.value}」标签的全部文章`,
+}))
 
 // 翻页后回到页面顶部
 watch(page, () => window.scrollTo({ top: 0 }))

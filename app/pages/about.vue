@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const config = useAppConfig()
 
-useHead({ title: '关于' })
+usePageSeo(() => ({ title: '关于' }))
 </script>
 
 <template>

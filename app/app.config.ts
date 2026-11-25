@@ -1,7 +1,9 @@
+import { SITE } from '#shared/site'
+
 export default defineAppConfig({
   site: {
-    name: 'ther',
-    author: 'renpingping',
+    name: SITE.name,
+    author: SITE.author,
     // 首页标语
     tagline: '明年依然好时节，扬帆再赴星辰约',
     // 源码仓库（source 分支为开发分支，master 为构建产物）

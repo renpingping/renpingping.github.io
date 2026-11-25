@@ -5,7 +5,11 @@ import { getSection } from '~/config/sections'
 const section = getSection('blog')
 const page = Number.parseInt(String(useRoute().params.page ?? ''), 10)
 
-useHead({ title: `第 ${page} 页 · ${section.title}` })
+usePageSeo(() => ({
+  title: `第 ${page} 页 · ${section.title}`,
+  description: section.description,
+  path: `/${section.key}/page/${page}`,
+}))
 
 const { data: posts, totalPages } = await useSectionPage('blog')
 </script>

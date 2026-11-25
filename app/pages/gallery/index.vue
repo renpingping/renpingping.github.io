@@ -3,7 +3,7 @@ const { data: albums } = await useAsyncData('gallery-list', () =>
   queryCollection('gallery').order('date', 'DESC').all(),
 )
 
-useHead({ title: '画廊' })
+usePageSeo(() => ({ title: '画廊', description: '图片收集与瞬间' }))
 </script>
 
 <template>

@@ -3,7 +3,10 @@ import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { parse } from 'devalue'
 import { expect, test } from '@playwright/test'
-import { DEFAULT_PAGE_SIZE, getSection, pageSizeOf } from '../../app/config/sections'
+import { DEFAULT_PAGE_SIZE, getSection, pageSizeOf, sections } from '../../app/config/sections'
+import { SITE } from '../../shared/site'
+import { toSiteUrl } from '../../shared/utils/site-url'
+import { escapeXml } from '../../shared/utils/xml'
 
 /**
  * 全站端到端测试，跑在 `nuxt generate` 的静态产物上。
@@ -20,6 +23,7 @@ interface Post {
   date: string
   tags: string[]
   draft: boolean
+  description?: string
 }
 
 function readPosts(section: 'blog' | 'weekly'): Post[] {
@@ -39,6 +43,7 @@ function readPosts(section: 'blog' | 'weekly'): Post[] {
         date: field('date') ?? '',
         tags: [...tagsBlock.matchAll(/^[ \t]+- (.*)$/gm)].map(m => m[1].trim()),
         draft: /^draft:\s*true\s*$/m.test(frontmatter),
+        description: field('description'),
       }
     })
     .sort((a, b) => b.date.localeCompare(a.date))
@@ -453,4 +458,79 @@ test.describe('高分屏上', () => {
     })
     expect(size.buffer).toBe(size.viewport * 2)
   })
+})
+
+const publishedPosts = () =>
+  [...blog, ...weekly].filter(post => !post.draft).sort((a, b) => b.date.localeCompare(a.date))
+
+test('搜索引擎：文章页输出 canonical、描述与 Open Graph', async ({ page }) => {
+  const latest = publishedPosts()[0]!
+  await open(page, latest.path)
+  const description = latest.description ?? SITE.description
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', toSiteUrl(latest.path))
+  await expect(page.locator('head meta[name="description"]')).toHaveAttribute('content', description)
+  const openGraph = (property: string) => page.locator(`head meta[property="${property}"]`)
+  await expect(openGraph('og:title')).toHaveAttribute('content', latest.title)
+  await expect(openGraph('og:description')).toHaveAttribute('content', description)
+  await expect(openGraph('og:url')).toHaveAttribute('content', toSiteUrl(latest.path))
+  await expect(openGraph('og:type')).toHaveAttribute('content', 'article')
+  await expect(openGraph('og:site_name')).toHaveAttribute('content', SITE.name)
+})
+
+test('搜索引擎：首页、列表页与标签页都有指向规范地址的 canonical', async ({ page }) => {
+  const pages: [string, string][] = [
+    ['/', '/'],
+    ['/blog', '/blog'],
+    [`/tags/${encodeURIComponent('技术热读')}`, '/tags/技术热读'],
+  ]
+  for (const [url, path] of pages) {
+    await open(page, url)
+    await expect(page.locator('link[rel="canonical"]'), url).toHaveAttribute('href', toSiteUrl(path))
+  }
+})
+
+test('站点地图：列出全部已发布文章的规范地址与主要页面，不含草稿', async ({ request }) => {
+  const response = await request.get('/sitemap.xml')
+  expect(response.status()).toBe(200)
+  expect(response.headers()['content-type']).toContain('application/xml')
+  const xml = await response.text()
+  expect(xml).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+
+  const locations = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]!).sort()
+  // /blog/ 与 /weekly/ 是列表页，不算文章地址
+  const sectionRoots = sections.map(section => toSiteUrl(`/${section.key}`))
+  const articleLocations = locations.filter(loc => /\/(blog|weekly)\//.test(loc) && !/\/page\//.test(loc) && !sectionRoots.includes(loc))
+  expect(articleLocations).toEqual(publishedPosts().map(post => toSiteUrl(post.path)).sort())
+  for (const path of ['/', '/blog/', '/weekly/', '/projects/', '/gallery/', '/collections/', '/tags/', '/about/'])
+    expect(locations, path).toContain(SITE.url + path)
+
+  // 站点地图里的每个地址都必须真的能打开，否则等于向搜索引擎提交了死链
+  for (const location of locations) {
+    const response = await request.get(location)
+    expect(response.status(), location).toBe(200)
+  }
+})
+
+test('RSS：按日期从新到旧输出最新文章', async ({ request }) => {
+  const response = await request.get('/rss.xml')
+  expect(response.status()).toBe(200)
+  const xml = await response.text()
+  expect(xml).toContain('<rss version="2.0"')
+
+  const field = (name: string) => [...xml.matchAll(new RegExp(`<item>[\\s\\S]*?<${name}>([^<]*)</${name}>`, 'g'))].map(match => match[1]!)
+  const latest = publishedPosts().slice(0, 20)
+  expect(field('title')).toEqual(latest.map(post => escapeXml(post.title)))
+  expect(field('link')).toEqual(latest.map(post => toSiteUrl(post.path)))
+  expect(field('pubDate')[0]).toMatch(/GMT$/)
+
+  // 自引用链接是文件地址，不能带尾斜杠
+  expect(xml).toContain(`href="${SITE.url}/rss.xml"`)
+})
+
+test('robots.txt：允许抓取并指向站点地图', async ({ request }) => {
+  const response = await request.get('/robots.txt')
+  expect(response.status()).toBe(200)
+  const text = await response.text()
+  expect(text).toMatch(/^allow:\s*\/$/im)
+  expect(text).toContain(`Sitemap: ${SITE.url}/sitemap.xml`)
 })
