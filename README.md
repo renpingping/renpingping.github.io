@@ -218,7 +218,7 @@ draft: true                          # 可选；草稿不出现在任何列表�
 `.github/workflows/deploy.yml`：
 
 1. 推送或合并到 `source` 时触发（也可手动触发）；
-2. `validate` 任务复用 `ci.yml`：lint 与类型检查、单元测试、内容校验、依赖审计、构建与端到端测试、提交信息规范；
+2. `validate` 任务复用 `ci.yml`：lint 与类型检查、单元测试、内容校验、依赖审计、构建与端到端测试（提交信息规范只在 PR 上检查）；
 3. 全部通过后 `deploy` 任务执行 `nuxt generate`，发布到 `master`，GitHub Pages 自动更新；
 4. 同一时刻只运行一个部署，新的推送会取消进行中的旧部署。
 
