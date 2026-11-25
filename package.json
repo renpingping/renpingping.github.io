@@ -11,7 +11,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@nuxt/content": "^3.16.2",
@@ -20,7 +21,9 @@
     "p5i": "^0.6.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/vite": "^4.3.5",
+    "serve": "^14.2.8",
     "tailwindcss": "^4.3.5",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.14"
