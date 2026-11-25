@@ -2,8 +2,6 @@
 import type { CollectionsCollectionItem } from '@nuxt/content'
 
 defineProps<{ item: CollectionsCollectionItem }>()
-
-const { format } = useFormatDate()
 </script>
 
 <template>
@@ -39,7 +37,7 @@ const { format } = useFormatDate()
         class="text-xs text-zinc-400"
       >{{ item.source }}</span>
       <span class="text-xs text-zinc-300 dark:text-zinc-600">·</span>
-      <time class="text-xs text-zinc-400">{{ format(item.date) }}</time>
+      <time class="text-xs text-zinc-400">{{ formatDate(item.date) }}</time>
       <TagChip
         v-for="t in item.tags"
         :key="t"

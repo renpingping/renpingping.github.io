@@ -1,0 +1,10 @@
+{
+  "advisories": [
+    {
+      "id": "GHSA-mrhx-c7xc-m3w5",
+      "package": "zod",
+      "reason": "@nuxt/content 3.17.0 锁定 zod ^3.25.76，3.25 线没有修复版；npm 给出的唯一修复是换成 zod 4 或把 content 降级到 2.x。zod 只在构建期解析仓库内的 frontmatter（可信输入），静态产物里不包含它。",
+      "until": "2027-05-31"
+    }
+  ]
+}

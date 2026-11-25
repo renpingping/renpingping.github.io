@@ -2,8 +2,6 @@
 import type { PostSummary } from '~/types/post'
 
 defineProps<{ post: PostSummary }>()
-
-const { format } = useFormatDate()
 </script>
 
 <template>
@@ -29,7 +27,7 @@ const { format } = useFormatDate()
         class="mt-2 line-clamp-2 text-sm text-zinc-500"
       >{{ post.description }}</p>
       <div class="mt-4 flex flex-wrap items-center gap-2">
-        <time class="text-xs text-zinc-400">{{ format(post.date) }}</time>
+        <time class="text-xs text-zinc-400">{{ formatDate(post.date) }}</time>
         <TagChip
           v-for="t in post.tags"
           :key="t"

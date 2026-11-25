@@ -3,8 +3,6 @@ import type { ProjectsCollectionItem } from '@nuxt/content'
 
 defineProps<{ project: ProjectsCollectionItem }>()
 
-const { format } = useFormatDate()
-
 // /ZONE 为纯静态页（非 SPA 路由），走整页跳转；其余站内链接走 SPA 路由
 const isSpaLink = (link: string) => !link.startsWith('http') && !link.startsWith('/ZONE')
 </script>
@@ -37,7 +35,7 @@ const isSpaLink = (link: string) => !link.startsWith('http') && !link.startsWith
         >{{ t }}</span>
       </div>
       <div class="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3 text-sm dark:border-zinc-800">
-        <time class="text-xs text-zinc-400">{{ format(project.date) }}</time>
+        <time class="text-xs text-zinc-400">{{ formatDate(project.date) }}</time>
         <div class="flex gap-3">
           <a
             v-if="project.repo"

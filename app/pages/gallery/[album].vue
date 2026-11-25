@@ -15,8 +15,6 @@ if (!album.value) {
 
 const lightboxIndex = ref<number | null>(null)
 
-const { format } = useFormatDate()
-
 useHead({ title: album.value.title })
 </script>
 
@@ -31,7 +29,7 @@ useHead({ title: album.value.title })
       </NuxtLink>
       <h1 class="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">{{ album.title }}</h1>
       <p class="mt-2 text-sm text-zinc-500">
-        {{ album.description }} · {{ album.images.length }} 张 · {{ format(album.date) }}
+        {{ album.description }} · {{ album.images.length }} 张 · {{ formatDate(album.date) }}
       </p>
     </header>
 

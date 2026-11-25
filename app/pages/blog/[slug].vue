@@ -20,8 +20,6 @@ const next = computed(() => surround.value?.[1]?.path ? surround.value[1] : null
 // 每日技术热读：无侧栏目录，正文列拉宽（卡片可达 ~976px）
 const isDaily = computed(() => (post.value?.tags ?? []).includes('技术热读'))
 
-const { format } = useFormatDate()
-
 // title/description 用 getter 保持响应式：上一篇/下一篇是同路由参数变化，
 // 组件复用不重跑 setup，若取一次性字符串会导致标签页标题停留在旧文章
 useHead({
@@ -46,7 +44,7 @@ useHead({
           {{ post.title }}
         </h1>
         <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
-          <time class="text-zinc-400">{{ format(post.date) }}</time>
+          <time class="text-zinc-400">{{ formatDate(post.date) }}</time>
           <TagChip
             v-for="t in post.tags"
             :key="t"

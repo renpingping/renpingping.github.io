@@ -9,8 +9,6 @@ if (!post.value) {
   throw createError({ statusCode: 404, statusMessage: '周报不存在' })
 }
 
-const { format } = useFormatDate()
-
 // 与 blog/[slug].vue 保持一致：getter 保持响应式，避免同路由参数变化时标题不更新
 useHead({
   title: () => post.value?.title ?? '',
@@ -28,7 +26,7 @@ useHead({
         {{ post.title }}
       </h1>
       <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
-        <time class="text-zinc-400">{{ format(post.date) }}</time>
+        <time class="text-zinc-400">{{ formatDate(post.date) }}</time>
         <TagChip
           v-for="t in post.tags"
           :key="t"
