@@ -13,14 +13,10 @@ defineProps<{
 
 <template>
   <div>
-    <header class="mb-8">
-      <h1 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-        {{ section.title }}
-      </h1>
-      <p class="mt-2 text-sm text-muted">
-        {{ section.description }}
-      </p>
-    </header>
+    <PageHeader
+      :title="section.title"
+      :description="section.description"
+    />
 
     <PostGrid
       :posts="posts"

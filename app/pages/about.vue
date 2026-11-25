@@ -22,7 +22,7 @@ usePageSeo(() => ({ title: '关于' }))
       </div>
     </section>
 
-    <section class="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+    <section class="card-surface p-6">
       <h2 class="mb-5 font-semibold text-zinc-900 dark:text-zinc-100">技能</h2>
       <div class="space-y-4">
         <div
@@ -43,7 +43,7 @@ usePageSeo(() => ({ title: '关于' }))
       </div>
     </section>
 
-    <section class="mt-8 rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
+    <section class="mt-8 card-surface p-6">
       <h2 class="mb-3 font-semibold text-zinc-900 dark:text-zinc-100">本站</h2>
       <p class="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
         由 <a

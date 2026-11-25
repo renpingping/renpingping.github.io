@@ -46,6 +46,14 @@ body {
   .text-muted {
     @apply text-zinc-600 dark:text-zinc-400;
   }
+
+}
+
+/* 卡片外观：文章、项目、收藏卡片与关于页的面板共用 */
+@layer components {
+  .card-surface {
+    @apply rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900;
+  }
 }
 
 /* Shiki 双主题：暗色下切换到 dark 变量 */

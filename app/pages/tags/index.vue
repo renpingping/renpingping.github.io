@@ -8,9 +8,7 @@ usePageSeo(() => ({ title: '标签', description: '文章与收藏的标签索�
 
 <template>
   <div>
-    <header class="mb-8">
-      <h1 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100">标签</h1>
-    </header>
+    <PageHeader title="标签" />
     <div class="flex flex-wrap gap-3">
       <NuxtLink
         v-for="[tag, count] in tags"

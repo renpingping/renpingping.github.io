@@ -9,23 +9,13 @@ defineProps<{ item: CollectionsCollectionItem }>()
     :href="item.url"
     target="_blank"
     rel="noopener"
-    class="group block rounded-xl border border-zinc-200 bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-700"
+    class="card-surface group block p-5 transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-indigo-700"
   >
     <div class="flex items-start justify-between gap-4">
       <h2 class="font-medium text-zinc-900 transition-colors group-hover:text-indigo-600 dark:text-zinc-100 dark:group-hover:text-indigo-400">
         {{ item.title }}
       </h2>
-      <svg
-        class="mt-1 h-4 w-4 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:text-indigo-500"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-      ><path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M7 17 17 7M8 7h9v9"
-      /></svg>
+      <IconExternalLink class="mt-1 h-4 w-4 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:text-indigo-500" />
     </div>
     <p
       v-if="item.note"

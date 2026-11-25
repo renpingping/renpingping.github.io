@@ -7,7 +7,7 @@ defineProps<{ post: PostSummary }>()
 <template>
   <NuxtLink
     :to="post.path"
-    class="group block overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+    class="card-surface group block overflow-hidden transition-all hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
   >
     <div class="aspect-[2/1] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
       <img
