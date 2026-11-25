@@ -13,23 +13,28 @@ interface AsyncPosts {
   data: Ref<PostSummary[] | null>
 }
 
-/** 某个板块内的文章摘要，按日期从新到旧 */
+/** 某个板块内已发布文章（不含草稿）的摘要，按日期从新到旧 */
 function sectionQuery(section: Section) {
   return queryCollection('posts')
     .where('path', 'LIKE', `/${section.key}/%`)
+    .where('draft', '=', false)
     .select(...POST_SUMMARY_FIELDS)
     .order('date', 'DESC')
 }
 
-/** 某个板块的全部文章摘要（不含正文） */
+/** 某个板块全部已发布文章的摘要（不含草稿与正文） */
 export function useSectionPosts(section: Section): AsyncPosts {
   return useAsyncData(`${section.key}-list`, () => sectionQuery(section).all())
 }
 
-/** 全部板块的文章摘要，按日期从新到旧。数据键由调用方指定，每个页面各自预渲染 */
+/** 全部板块已发布文章的摘要（不含草稿与正文），按日期从新到旧。数据键由调用方指定，每个页面各自预渲染 */
 export function useAllPosts(key: string): AsyncPosts {
   return useAsyncData(key, () =>
-    queryCollection('posts').select(...POST_SUMMARY_FIELDS).order('date', 'DESC').all(),
+    queryCollection('posts')
+      .where('draft', '=', false)
+      .select(...POST_SUMMARY_FIELDS)
+      .order('date', 'DESC')
+      .all(),
   )
 }
 
@@ -61,8 +66,8 @@ export async function usePostPage(section: Section) {
 
   const { data: post } = await postFetch
 
-  // 合并集合后文章路径全局唯一，但页面只能展示自己板块下的文章：跨板块访问按 404 处理
-  if (!post.value || !belongsSection(path, section.key))
+  // 合并集合后文章路径全局唯一，但页面只能展示自己板块下的文章：跨板块访问按 404 处理；草稿同样不可见
+  if (!post.value || !belongsSection(path, section.key) || post.value.draft === true)
     throw createError({ statusCode: 404, statusMessage: '文章不存在' })
 
   const surround = computed(() =>

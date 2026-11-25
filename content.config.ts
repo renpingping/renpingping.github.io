@@ -1,12 +1,17 @@
 import { defineContentConfig, defineCollection, z } from '@nuxt/content'
 
-// 所有文章类内容共用一个 schema；板块之间的差异（标题、版式、是否进首页等）在 app/config/sections.ts 里描述
+// 所有文章类内容共用一个 schema；板块之间的差异（标题、版式、是否进首页等）在 app/config/sections.ts 里描述。
+// 注意：Nuxt Content 只用 schema 生成类型，不在构建时校验 frontmatter；
+// 日期格式、封面文件、卡片链接等由 scripts/check-content.mjs 检查（npm test 的一部分，先于部署运行）。
 const postSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
-  date: z.string(),
+  // ISO 日期（YYYY-MM-DD）
+  date: z.string().date(),
   tags: z.array(z.string()).default([]),
   cover: z.string().optional(),
+  // 草稿不出现在任何列表里，直接访问也是 404
+  draft: z.boolean().default(false),
 })
 
 export default defineContentConfig({

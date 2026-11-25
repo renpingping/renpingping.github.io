@@ -13,10 +13,12 @@ import { expect, test } from '@playwright/test'
 const CONTENT = resolve(process.cwd(), 'content')
 
 interface Post {
+  path: string
   slug: string
   title: string
   date: string
   tags: string[]
+  draft: boolean
 }
 
 function readPosts(section: 'blog' | 'weekly'): Post[] {
@@ -28,11 +30,14 @@ function readPosts(section: 'blog' | 'weekly'): Post[] {
       const frontmatter = text.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? ''
       const field = (key: string) => frontmatter.match(new RegExp(`^${key}:\\s*(.*)$`, 'm'))?.[1]?.trim().replace(/^["']|["']$/g, '')
       const tagsBlock = frontmatter.match(/^tags:\n((?:[ \t]+- .*\n?)+)/m)?.[1] ?? ''
+      const slug = file.replace(/\.md$/, '')
       return {
-        slug: file.replace(/\.md$/, ''),
+        path: `/${section}/${slug}`,
+        slug,
         title: field('title') ?? '',
         date: field('date') ?? '',
         tags: [...tagsBlock.matchAll(/^[ \t]+- (.*)$/gm)].map(m => m[1].trim()),
+        draft: /^draft:\s*true\s*$/m.test(frontmatter),
       }
     })
     .sort((a, b) => b.date.localeCompare(a.date))
@@ -304,6 +309,23 @@ test('列表页数据：只带卡片需要的字段，不携带文章正文', as
     expect(Array.isArray(items), key).toBe(true)
     for (const item of items as Record<string, unknown>[])
       expect(item, `${key} → ${String(item.path)}`).not.toHaveProperty('body')
+  }
+})
+
+test('列表数据：每个列表恰好包含应有的已发布文章，草稿不会出现', async ({ request }) => {
+  const published = (section: 'blog' | 'weekly') => readPosts(section).filter(post => !post.draft).map(post => post.path)
+  const everything = [...readPosts('blog'), ...readPosts('weekly')]
+    .filter(post => !post.draft)
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .map(post => post.path)
+  const expected: [string, string, string[]][] = [
+    ['/blog', 'blog-list', published('blog')],
+    ['/weekly', 'weekly-list', published('weekly')],
+    ['/tags', 'tags-all', everything],
+  ]
+  for (const [path, key, paths] of expected) {
+    const payload = parse(await (await request.get(`${path}/_payload.json`)).text(), payloadRevivers) as { data: Record<string, { path: string }[]> }
+    expect(payload.data[key]?.map(item => item.path), key).toEqual(paths)
   }
 })
 
