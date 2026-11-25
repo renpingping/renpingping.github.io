@@ -130,6 +130,15 @@ test('文章列表：首页只显示第一页，顺着「下一页」能走遍�
   // 超过一页时才出现「下一页」
   await expect(page.getByRole('link', { name: '下一页' })).toHaveCount(published.length > pageSize('blog') ? 1 : 0)
 
+  // 第一张卡片显示的标题、日期与标签与内容文件一致
+  const first = blog[0]!
+  const card = page.locator(`main a[href="${first.path}"]`)
+  await expect(card.getByRole('heading', { level: 2 })).toHaveText(first.title)
+  const [year, month, day] = first.date.split('-')
+  await expect(card.getByText(`${year} 年 ${Number(month)} 月 ${Number(day)} 日`, { exact: true })).toBeVisible()
+  for (const tag of first.tags)
+    await expect(card.getByText(tag, { exact: true })).toBeVisible()
+
   expect(await collectAcrossPages(page, 'blog')).toEqual(published)
   expect(errors).toEqual([])
 })
@@ -197,7 +206,9 @@ test('周报：列表、详情与返回', async ({ page }) => {
   const errors = trackErrors(page)
   await open(page, '/weekly')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('GitHub 周报')
-  await expect(page.locator('main a[href^="/weekly/"]')).toHaveCount(weekly.length)
+  // 列表按页显示：首页最多每页条数，且不含分页链接
+  const cards = page.locator('main a[href^="/weekly/"]:not([href^="/weekly/page/"])')
+  await expect(cards).toHaveCount(Math.min(pageSize('weekly'), weekly.length))
 
   const [latest] = weekly
   await page.locator(`main a[href="/weekly/${latest.slug}"]`).click()
@@ -217,7 +228,7 @@ test('标签页：同时包含文章与周报', async ({ page }) => {
   await page.getByRole('link', { name: new RegExp(escapeRe(tag)) }).click()
   await expect(page).toHaveURL(new RegExp(`/tags/${encodeURIComponent(tag)}`))
   await expect(page).toHaveTitle(new RegExp(escapeRe(tag)))
-  for (const post of weekly)
+  for (const post of weekly.slice(0, TAG_PAGE_SIZE))
     await expect(page.locator(`main a[href="/weekly/${post.slug}"]`)).toHaveCount(1)
   expect(errors).toEqual([])
 })
@@ -501,12 +512,15 @@ test('站点地图：列出全部已发布文章的规范地址与主要页面�
   const sectionRoots = sections.map(section => toSiteUrl(`/${section.key}`))
   const articleLocations = locations.filter(loc => /\/(blog|weekly)\//.test(loc) && !/\/page\//.test(loc) && !sectionRoots.includes(loc))
   expect(articleLocations).toEqual(publishedPosts().map(post => toSiteUrl(post.path)).sort())
-  for (const path of ['/', '/blog/', '/weekly/', '/projects/', '/gallery/', '/collections/', '/tags/', '/about/'])
+  const mustHave = ['/', ...sections.map(section => `/${section.key}/`), '/projects/', '/gallery/', '/collections/', '/tags/', '/about/']
+  for (const path of mustHave)
     expect(locations, path).toContain(SITE.url + path)
 
   // 站点地图里的每个地址都必须真的能打开，否则等于向搜索引擎提交了死链
   for (const location of locations) {
-    const response = await request.get(location)
+    // 只取路径部分，请求的是本地构建产物；直接用完整地址会打到线上站点
+    const { pathname, search } = new URL(location)
+    const response = await request.get(`${pathname}${search}`)
     expect(response.status(), location).toBe(200)
   }
 })
@@ -581,7 +595,7 @@ test('灯箱：是对话框、焦点不跑到背后、背景不滚动，关闭�
   await page.keyboard.press('Escape')
   await expect(dialog).toHaveCount(0)
   // 焦点回到打开它的那张缩略图，背景恢复滚动
-  expect(await page.evaluate(() => document.activeElement?.querySelector('img') !== null || document.activeElement?.tagName === 'BUTTON')).toBe(true)
+  expect(await thumbs.nth(1).evaluate(image => image.closest('button') === document.activeElement)).toBe(true)
   expect(await page.evaluate(() => document.body.style.overflow)).toBe('')
 })
 
@@ -612,4 +626,24 @@ test('文内锚点：跳转后目标标题完整露在吸顶导航栏下方', as
     return Math.round(heading.getBoundingClientRect().top - header.getBoundingClientRect().height)
   }, id)
   expect(await gapBelowHeader(), '标题顶部相对导航栏底部的距离').toBeGreaterThanOrEqual(0)
+})
+
+test('带尾斜杠的地址（GitHub Pages 的规范形式）：文章与上一篇/下一篇正常，水合无报错，直接复用预渲染的数据', async ({ page }) => {
+  const errors = trackErrors(page)
+  const requested: string[] = []
+  page.on('request', request => requested.push(request.url()))
+  const post = blog[1]! // 既有更新的一篇，也有更旧的一篇
+
+  await open(page, `${post.path}/`)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(post.title)
+  await expect(page.getByRole('link', { name: /上一篇/ })).toHaveAttribute('href', blog[0]!.path)
+  await expect(page.getByRole('link', { name: /下一篇/ })).toHaveAttribute('href', blog[2]!.path)
+  expect(errors).toEqual([])
+  // 预渲染的页面数据应被直接复用；在浏览器里重新查询需要加载几百 KB 的 SQLite
+  expect(requested.filter(url => /\.wasm/.test(url))).toEqual([])
+})
+
+test('未开启「减少动态效果」时，流场背景是动的（对照组）', async ({ page }) => {
+  await open(page, `/blog/${blog[0]!.slug}`)
+  expect((await sampleBackground(page)).changed).toBe(true)
 })
