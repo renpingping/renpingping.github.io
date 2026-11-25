@@ -5,6 +5,7 @@ on:
     branches: [source]
   workflow_dispatch:
 
+# 第三方 Action 固定到提交哈希，版本写在行尾注释里（由 Dependabot 提升级 PR）；本流水线持有仓库的写权限
 permissions:
   contents: write
 
@@ -23,9 +24,9 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -38,7 +39,7 @@ jobs:
         run: touch .output/public/.nojekyll
 
       - name: Deploy to master (GitHub Pages)
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: master
