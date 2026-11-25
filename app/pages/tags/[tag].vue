@@ -32,7 +32,7 @@ watch(page, () => window.scrollTo({ top: 0 }))
 <template>
   <div>
     <header class="mb-8">
-      <p class="text-sm text-zinc-400">标签</p>
+      <p class="text-sm text-muted">标签</p>
       <h1 class="mt-1 text-3xl font-bold text-zinc-900 dark:text-zinc-100"># {{ tag }}</h1>
     </header>
 

@@ -17,7 +17,7 @@ defineProps<{
       <h1 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
         {{ section.title }}
       </h1>
-      <p class="mt-2 text-sm text-zinc-500">
+      <p class="mt-2 text-sm text-muted">
         {{ section.description }}
       </p>
     </header>

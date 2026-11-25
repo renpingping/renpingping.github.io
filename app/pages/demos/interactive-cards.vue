@@ -90,9 +90,9 @@ usePageSeo(() => ({ title: '记忆翻牌', description: 'Vue 3 组合式 API 实
     <header class="mb-6 flex items-end justify-between">
       <div>
         <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">记忆翻牌</h1>
-        <p class="mt-1 text-sm text-zinc-500">Vue 3 响应式 + 组合式 API 小游戏</p>
+        <p class="mt-1 text-sm text-muted">Vue 3 响应式 + 组合式 API 小游戏</p>
       </div>
-      <div class="flex items-center gap-4 text-sm text-zinc-500">
+      <div class="flex items-center gap-4 text-sm text-muted">
         <span>⏱ {{ elapsed }}s</span>
         <span>🎯 {{ moves }} 步</span>
       </div>

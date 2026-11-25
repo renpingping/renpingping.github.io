@@ -24,10 +24,10 @@ defineProps<{ post: PostSummary }>()
       </h2>
       <p
         v-if="post.description"
-        class="mt-2 line-clamp-2 text-sm text-zinc-500"
+        class="mt-2 line-clamp-2 text-sm text-muted"
       >{{ post.description }}</p>
       <div class="mt-4 flex flex-wrap items-center gap-2">
-        <time class="text-xs text-zinc-400">{{ formatDate(post.date) }}</time>
+        <time class="text-xs text-muted">{{ formatDate(post.date) }}</time>
         <TagChip
           v-for="t in post.tags"
           :key="t"

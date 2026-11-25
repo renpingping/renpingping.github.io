@@ -26,7 +26,7 @@ const isSpaLink = (link: string) => !link.startsWith('http') && !link.startsWith
           class="shrink-0 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400"
         >精选</span>
       </div>
-      <p class="mt-2 flex-1 text-sm text-zinc-500">{{ project.description }}</p>
+      <p class="mt-2 flex-1 text-sm text-muted">{{ project.description }}</p>
       <div class="mt-4 flex flex-wrap gap-1.5">
         <span
           v-for="t in project.tech"
@@ -35,14 +35,14 @@ const isSpaLink = (link: string) => !link.startsWith('http') && !link.startsWith
         >{{ t }}</span>
       </div>
       <div class="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3 text-sm dark:border-zinc-800">
-        <time class="text-xs text-zinc-400">{{ formatDate(project.date) }}</time>
+        <time class="text-xs text-muted">{{ formatDate(project.date) }}</time>
         <div class="flex gap-3">
           <a
             v-if="project.repo"
             :href="project.repo"
             target="_blank"
             rel="noopener"
-            class="text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
+            class="text-muted transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
           >源码</a>
           <!-- 站内 SPA 路由用 NuxtLink；外链与 /ZONE 静态页用 a -->
           <NuxtLink

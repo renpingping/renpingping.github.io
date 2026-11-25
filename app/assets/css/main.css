@@ -12,6 +12,17 @@
 
 @theme {
   --font-sans: "MyHand", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /*
+   * 热读卡片来源标签的底色：保持各平台原有的色相，只降低明度，使白字对比度不低于 4.8:1。
+   * 由 tests/unit/contrast.test.ts 读取这里的值校验。
+   */
+  --color-chip-hn: #bf4c00; /* Hacker News */
+  --color-chip-juejin: #1a6fde; /* 掘金 */
+  --color-chip-qbitai: #00834c; /* 量子位 */
+  --color-chip-bili: #b2516d; /* B 站 */
+  --color-chip-other: #6c737a; /* 其它来源 */
+  --color-chip-hot: #1a7f37; /* 「热门」评分 */
 }
 
 html {
@@ -24,6 +35,17 @@ body {
 
 ::selection {
   @apply bg-indigo-500/30;
+}
+
+@layer components {
+  /*
+   * 小字元信息与说明文字（日期、数量、副标题、摘要、上下篇标签）。
+   * 浅色用 zinc-600、暗色用 zinc-400：对页面底色与卡片底色都达到 WCAG AA（4.5:1），
+   * 由 tests/unit/contrast.test.ts 直接读取这里的颜色值校验。
+   */
+  .text-muted {
+    @apply text-zinc-600 dark:text-zinc-400;
+  }
 }
 
 /* Shiki 双主题：暗色下切换到 dark 变量 */

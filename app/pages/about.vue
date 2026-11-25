@@ -13,7 +13,7 @@ usePageSeo(() => ({ title: '关于' }))
         class="h-24 w-24 rounded-full ring-4 ring-indigo-500/20"
       >
       <h1 class="mt-5 text-3xl font-bold text-zinc-900 dark:text-zinc-100">{{ config.site.author }}</h1>
-      <p class="mt-2 text-sm text-zinc-500">{{ config.about.role }}</p>
+      <p class="mt-2 text-sm text-muted">{{ config.about.role }}</p>
       <p class="mt-6 leading-relaxed text-zinc-600 dark:text-zinc-400">
         {{ config.about.intro }}
       </p>
@@ -31,7 +31,7 @@ usePageSeo(() => ({ title: '关于' }))
         >
           <div class="mb-1 flex justify-between text-sm">
             <span class="text-zinc-700 dark:text-zinc-300">{{ s.name }}</span>
-            <span class="text-zinc-400">{{ s.percent }}%</span>
+            <span class="text-muted">{{ s.percent }}%</span>
           </div>
           <div class="h-1.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
             <div

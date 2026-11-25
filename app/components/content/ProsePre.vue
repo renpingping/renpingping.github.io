@@ -21,9 +21,9 @@ async function copy() {
 <template>
   <div class="group relative my-6 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800">
     <div class="flex items-center justify-between border-b border-zinc-200 bg-zinc-100 px-4 py-1.5 text-xs dark:border-zinc-800 dark:bg-zinc-900">
-      <span class="font-mono text-zinc-500">{{ filename ?? language ?? 'text' }}</span>
+      <span class="font-mono text-muted">{{ filename ?? language ?? 'text' }}</span>
       <button
-        class="inline-flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
+        class="inline-flex items-center gap-1 text-muted transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
         @click="copy"
       >
         <svg

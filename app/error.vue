@@ -19,7 +19,7 @@ function goHome() {
       </h1>
       <p
         v-if="error.statusCode === 404"
-        class="mt-2 text-sm text-zinc-500"
+        class="mt-2 text-sm text-muted"
       >
         你访问的地址可能已迁移，试试从首页或文章列表找找。
       </p>

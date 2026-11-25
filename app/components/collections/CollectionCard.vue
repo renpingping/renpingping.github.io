@@ -29,15 +29,15 @@ defineProps<{ item: CollectionsCollectionItem }>()
     </div>
     <p
       v-if="item.note"
-      class="mt-2 text-sm text-zinc-500"
+      class="mt-2 text-sm text-muted"
     >{{ item.note }}</p>
     <div class="mt-3 flex flex-wrap items-center gap-2">
       <span
         v-if="item.source"
-        class="text-xs text-zinc-400"
+        class="text-xs text-muted"
       >{{ item.source }}</span>
       <span class="text-xs text-zinc-300 dark:text-zinc-600">·</span>
-      <time class="text-xs text-zinc-400">{{ formatDate(item.date) }}</time>
+      <time class="text-xs text-muted">{{ formatDate(item.date) }}</time>
       <TagChip
         v-for="t in item.tags"
         :key="t"

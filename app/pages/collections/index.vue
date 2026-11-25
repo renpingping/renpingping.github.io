@@ -12,7 +12,7 @@ usePageSeo(() => ({ title: '收藏', description: '读过并想留住的好文�
   <div>
     <header class="mb-8">
       <h1 class="text-3xl font-bold text-zinc-900 dark:text-zinc-100">收藏</h1>
-      <p class="mt-2 text-sm text-zinc-500">读过并想留住的好文章与好资源</p>
+      <p class="mt-2 text-sm text-muted">读过并想留住的好文章与好资源</p>
     </header>
 
     <div
@@ -47,7 +47,7 @@ usePageSeo(() => ({ title: '收藏', description: '读过并想留住的好文�
 
     <p
       v-if="!filtered.length"
-      class="py-16 text-center text-sm text-zinc-400"
+      class="py-16 text-center text-sm text-muted"
     >暂无收藏</p>
   </div>
 </template>

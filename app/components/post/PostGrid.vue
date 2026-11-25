@@ -19,7 +19,7 @@ defineProps<{
 
   <p
     v-if="emptyText && !posts.length"
-    class="py-16 text-center text-sm text-zinc-400"
+    class="py-16 text-center text-sm text-muted"
   >
     {{ emptyText }}
   </p>

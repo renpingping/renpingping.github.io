@@ -33,7 +33,7 @@ usePageSeo(() => ({
           {{ post.title }}
         </h1>
         <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
-          <time class="text-zinc-400">{{ formatDate(post.date) }}</time>
+          <time class="text-muted">{{ formatDate(post.date) }}</time>
           <TagChip
             v-for="tag in post.tags ?? []"
             :key="tag"
@@ -66,7 +66,7 @@ usePageSeo(() => ({
           :to="newer.path"
           class="group rounded-lg border border-zinc-200 p-4 transition-colors hover:border-indigo-300 dark:border-zinc-800 dark:hover:border-indigo-700"
         >
-          <p class="text-xs text-zinc-400">
+          <p class="text-xs text-muted">
             上一篇
           </p>
           <p class="mt-1 font-medium text-zinc-800 group-hover:text-indigo-600 dark:text-zinc-200 dark:group-hover:text-indigo-400">
@@ -82,7 +82,7 @@ usePageSeo(() => ({
           :to="older.path"
           class="group rounded-lg border border-zinc-200 p-4 text-right transition-colors hover:border-indigo-300 dark:border-zinc-800 dark:hover:border-indigo-700"
         >
-          <p class="text-xs text-zinc-400">
+          <p class="text-xs text-muted">
             下一篇
           </p>
           <p class="mt-1 font-medium text-zinc-800 group-hover:text-indigo-600 dark:text-zinc-200 dark:group-hover:text-indigo-400">

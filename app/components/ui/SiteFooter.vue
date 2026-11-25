@@ -5,7 +5,7 @@ const year = new Date().getFullYear()
 
 <template>
   <footer class="border-t border-zinc-200/70 py-8 dark:border-zinc-800/70">
-    <div class="mx-auto flex max-w-5xl flex-col items-center gap-3 px-4 text-center text-sm text-zinc-500 sm:px-6">
+    <div class="mx-auto flex max-w-5xl flex-col items-center gap-3 px-4 text-center text-sm text-muted sm:px-6">
       <div class="flex items-center gap-4">
         <a
           v-for="s in config.site.socials"

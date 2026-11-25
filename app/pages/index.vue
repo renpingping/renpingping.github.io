@@ -27,7 +27,7 @@ const featured = computed(() => (projects.value ?? []).filter(p => p.featured).s
       <h1 class="mt-6 text-4xl font-black tracking-tight text-zinc-900 dark:text-zinc-100">
         {{ config.site.name }}
       </h1>
-      <p class="mt-3 max-w-md text-zinc-500">
+      <p class="mt-3 max-w-md text-muted">
         {{ config.site.tagline }}
       </p>
       <div class="mt-6">

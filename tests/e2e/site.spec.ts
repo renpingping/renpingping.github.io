@@ -534,3 +534,53 @@ test('robots.txt：允许抓取并指向站点地图', async ({ request }) => {
   expect(text).toMatch(/^allow:\s*\/$/im)
   expect(text).toContain(`Sitemap: ${SITE.url}/sitemap.xml`)
 })
+
+/** 画廊里的相册：slug 与图片数量从内容文件推导 */
+function readAlbums() {
+  const dir = join(CONTENT, 'gallery')
+  return readdirSync(dir)
+    .filter(file => file.endsWith('.yml'))
+    .map(file => ({
+      slug: file.replace(/\.yml$/, ''),
+      images: (readFileSync(join(dir, file), 'utf8').match(/^[ \t]*- src:/gm) ?? []).length,
+    }))
+}
+
+test('灯箱：是对话框、焦点不跑到背后、背景不滚动，关闭后焦点回到原图', async ({ page }) => {
+  const album = readAlbums()[0]!
+  await open(page, `/gallery/${album.slug}`)
+  const thumbs = page.locator('main button img')
+  await thumbs.nth(1).scrollIntoViewIfNeeded()
+  await thumbs.nth(1).click()
+
+  const dialog = page.getByRole('dialog')
+  const focusInside = () => page.evaluate(() => !!document.querySelector('[role="dialog"]')?.contains(document.activeElement))
+  await expect(dialog).toBeVisible()
+  await expect(dialog).toHaveAttribute('aria-modal', 'true')
+  expect(await focusInside()).toBe(true)
+
+  // 打开灯箱后，滚轮和翻页键都不能滚动背景。
+  // 不能用 window.scrollTo 来验证：overflow: hidden 只禁止用户滚动，并不禁止脚本滚动
+  const scrollBefore = await page.evaluate(() => window.scrollY)
+  await page.mouse.move(720, 450)
+  await page.mouse.wheel(0, 800)
+  await page.keyboard.press('PageDown')
+  await page.waitForTimeout(300)
+  expect(await page.evaluate(() => window.scrollY)).toBe(scrollBefore)
+
+  // 反复按 Tab 与 Shift+Tab，焦点始终留在对话框里
+  for (let round = 0; round < 8; round++) {
+    await page.keyboard.press('Tab')
+    expect(await focusInside(), `第 ${round + 1} 次 Tab`).toBe(true)
+  }
+  for (let round = 0; round < 8; round++) {
+    await page.keyboard.press('Shift+Tab')
+    expect(await focusInside(), `第 ${round + 1} 次 Shift+Tab`).toBe(true)
+  }
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  // 焦点回到打开它的那张缩略图，背景恢复滚动
+  expect(await page.evaluate(() => document.activeElement?.querySelector('img') !== null || document.activeElement?.tagName === 'BUTTON')).toBe(true)
+  expect(await page.evaluate(() => document.body.style.overflow)).toBe('')
+})
