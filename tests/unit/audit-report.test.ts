@@ -93,6 +93,13 @@ describe('evaluateAudit', () => {
     expect(result).toMatchObject({ ok: true, accepted: ['GHSA-due'] })
   })
 
+  it('拿不到审计结果时（断网、registry 出错）直接报错，而不是当成「没有公告」放行', () => {
+    // npm audit 自身失败时输出 { error: … }，没有 vulnerabilities 字段
+    expect(() => evaluateAudit({ error: { code: 'ENOTFOUND' } }, { advisories: [] }, today)).toThrow(/审计结果/)
+    expect(() => evaluateAudit({}, { advisories: [] }, today)).toThrow(/审计结果/)
+    expect(() => evaluateAudit(undefined, { advisories: [] }, today)).toThrow(/审计结果/)
+  })
+
   it('白名单条目缺少理由时直接报错，避免无说明地放行', () => {
     const broken = { advisories: [{ id: 'GHSA-x', package: 'p', until: '2027-01-01' }] }
     expect(() => evaluateAudit(report({}), broken, today)).toThrow(/reason/)

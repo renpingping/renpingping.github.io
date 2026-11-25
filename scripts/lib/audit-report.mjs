@@ -37,6 +37,11 @@ function indexAllowlist(allowlist) {
  * @param {Date} today 用于判断白名单是否到期（到期日当天仍有效）
  */
 export function evaluateAudit(report, allowlist, today) {
+  // npm audit 自身失败（断网、registry 出错）时输出的是 { error: … }，没有 vulnerabilities 字段。
+  // 这种情况必须报错，不能当成「没有公告」放行。
+  if (!report || typeof report.vulnerabilities !== 'object')
+    throw new Error('npm audit 没有返回审计结果（可能是网络或 registry 问题）')
+
   const allowed = indexAllowlist(allowlist)
   const todayStart = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
 

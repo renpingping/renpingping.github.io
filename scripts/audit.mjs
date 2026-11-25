@@ -15,7 +15,14 @@ if (audit.error || !audit.stdout) {
   process.exit(2)
 }
 
-const result = evaluateAudit(JSON.parse(audit.stdout), allowlist, new Date())
+let result
+try {
+  result = evaluateAudit(JSON.parse(audit.stdout), allowlist, new Date())
+}
+catch (error) {
+  console.error(`依赖审计无法完成：${error.message}`)
+  process.exit(2)
+}
 console.log(`依赖审计：${result.accepted.length + result.unexpected.length + result.expired.length} 条公告，${result.accepted.length} 条在白名单内`)
 
 for (const id of result.accepted)
