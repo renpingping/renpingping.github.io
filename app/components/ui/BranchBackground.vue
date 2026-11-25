@@ -139,5 +139,10 @@ watch(() => colorMode.value, () => start())
 </script>
 
 <template>
-  <canvas ref="el" aria-hidden="true" class="pointer-events-none fixed inset-0" style="z-index: -1" />
+  <canvas
+    ref="el"
+    aria-hidden="true"
+    class="pointer-events-none fixed inset-0"
+    style="z-index: -1"
+  />
 </template>

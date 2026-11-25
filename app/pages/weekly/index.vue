@@ -16,9 +16,16 @@ useHead({ title: 'GitHub 周报' })
     </header>
 
     <div class="grid gap-6 sm:grid-cols-2">
-      <PostCard v-for="post in posts" :key="post.path" :post="post" />
+      <PostCard
+        v-for="post in posts"
+        :key="post.path"
+        :post="post"
+      />
     </div>
 
-    <p v-if="!posts?.length" class="py-16 text-center text-sm text-zinc-400">暂无周报</p>
+    <p
+      v-if="!posts?.length"
+      class="py-16 text-center text-sm text-zinc-400"
+    >暂无周报</p>
   </div>
 </template>

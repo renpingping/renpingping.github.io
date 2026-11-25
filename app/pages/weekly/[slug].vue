@@ -29,12 +29,23 @@ useHead({
       </h1>
       <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
         <time class="text-zinc-400">{{ format(post.date) }}</time>
-        <TagChip v-for="t in post.tags" :key="t" :tag="t" />
+        <TagChip
+          v-for="t in post.tags"
+          :key="t"
+          :tag="t"
+        />
       </div>
     </header>
 
-    <div v-if="post.cover" class="mb-8 overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
-      <img :src="post.cover" :alt="post.title" class="aspect-[2/1] w-full object-cover">
+    <div
+      v-if="post.cover"
+      class="mb-8 overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800"
+    >
+      <img
+        :src="post.cover"
+        :alt="post.title"
+        class="aspect-[2/1] w-full object-cover"
+      >
     </div>
 
     <div class="prose-ther">

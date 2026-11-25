@@ -18,7 +18,11 @@ useHead({ title: 'Demo' })
       <p class="mt-2 text-sm text-zinc-500">做过的项目与 Demo</p>
     </header>
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <ProjectCard v-for="p in sorted" :key="p.stem" :project="p" />
+      <ProjectCard
+        v-for="p in sorted"
+        :key="p.stem"
+        :project="p"
+      />
     </div>
   </div>
 </template>

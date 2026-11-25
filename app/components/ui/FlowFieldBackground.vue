@@ -96,5 +96,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="el" aria-hidden="true" class="pointer-events-none fixed inset-0" style="z-index: -1" />
+  <div
+    ref="el"
+    aria-hidden="true"
+    class="pointer-events-none fixed inset-0"
+    style="z-index: -1"
+  />
 </template>

@@ -34,9 +34,12 @@ useHead({
 </script>
 
 <template>
-  <div v-if="post" :class="isDaily
-    ? 'grid grid-cols-1 gap-10'
-    : 'grid grid-cols-1 gap-10 xl:grid-cols-[1fr_240px]'">
+  <div
+    v-if="post"
+    :class="isDaily
+      ? 'grid grid-cols-1 gap-10'
+      : 'grid grid-cols-1 gap-10 xl:grid-cols-[1fr_240px]'"
+  >
     <article>
       <header class="mb-8">
         <h1 class="text-3xl font-bold leading-tight text-zinc-900 dark:text-zinc-100">
@@ -44,12 +47,23 @@ useHead({
         </h1>
         <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
           <time class="text-zinc-400">{{ format(post.date) }}</time>
-          <TagChip v-for="t in post.tags" :key="t" :tag="t" />
+          <TagChip
+            v-for="t in post.tags"
+            :key="t"
+            :tag="t"
+          />
         </div>
       </header>
 
-      <div v-if="post.cover" class="mb-8 overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
-        <img :src="post.cover" :alt="post.title" class="aspect-[2/1] w-full object-cover">
+      <div
+        v-if="post.cover"
+        class="mb-8 overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800"
+      >
+        <img
+          :src="post.cover"
+          :alt="post.title"
+          class="aspect-[2/1] w-full object-cover"
+        >
       </div>
 
       <div class="prose-ther">
@@ -67,7 +81,10 @@ useHead({
             {{ prev.title }}
           </p>
         </NuxtLink>
-        <span v-else class="hidden sm:block" />
+        <span
+          v-else
+          class="hidden sm:block"
+        />
         <NuxtLink
           v-if="next"
           :to="next.path"
@@ -81,7 +98,10 @@ useHead({
       </nav>
     </article>
 
-    <aside v-if="!isDaily && post.body?.toc?.links?.length" class="self-start">
+    <aside
+      v-if="!isDaily && post.body?.toc?.links?.length"
+      class="self-start"
+    >
       <Toc :links="post.body.toc.links" />
     </aside>
   </div>

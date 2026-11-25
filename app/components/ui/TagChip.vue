@@ -1,5 +1,5 @@
 <script setup lang="ts">
-withDefaults(defineProps<{ tag: string; clickable?: boolean }>(), { clickable: true })
+withDefaults(defineProps<{ tag: string, clickable?: boolean }>(), { clickable: true })
 </script>
 
 <template>

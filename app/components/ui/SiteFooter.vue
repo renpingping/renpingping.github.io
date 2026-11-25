@@ -15,11 +15,19 @@ const year = new Date().getFullYear()
           rel="noopener"
           class="transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
         >{{ s.label }}</a>
-        <NuxtLink to="/about" class="transition-colors hover:text-zinc-800 dark:hover:text-zinc-200">
+        <NuxtLink
+          to="/about"
+          class="transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
+        >
           关于
         </NuxtLink>
       </div>
-      <p>© {{ year }} {{ config.site.author }} · Powered by <a href="https://nuxt.com" target="_blank" rel="noopener" class="underline decoration-zinc-300 underline-offset-2 hover:text-zinc-800 dark:hover:text-zinc-200">Nuxt</a></p>
+      <p>© {{ year }} {{ config.site.author }} · Powered by <a
+        href="https://nuxt.com"
+        target="_blank"
+        rel="noopener"
+        class="underline decoration-zinc-300 underline-offset-2 hover:text-zinc-800 dark:hover:text-zinc-200"
+      >Nuxt</a></p>
     </div>
   </footer>
 </template>

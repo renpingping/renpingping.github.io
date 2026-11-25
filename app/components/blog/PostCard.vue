@@ -24,10 +24,18 @@ const { format } = useFormatDate()
       <h2 class="font-semibold text-zinc-900 transition-colors group-hover:text-indigo-600 dark:text-zinc-100 dark:group-hover:text-indigo-400">
         {{ post.title }}
       </h2>
-      <p v-if="post.description" class="mt-2 line-clamp-2 text-sm text-zinc-500">{{ post.description }}</p>
+      <p
+        v-if="post.description"
+        class="mt-2 line-clamp-2 text-sm text-zinc-500"
+      >{{ post.description }}</p>
       <div class="mt-4 flex flex-wrap items-center gap-2">
         <time class="text-xs text-zinc-400">{{ format(post.date) }}</time>
-        <TagChip v-for="t in post.tags" :key="t" :tag="t" :clickable="false" />
+        <TagChip
+          v-for="t in post.tags"
+          :key="t"
+          :tag="t"
+          :clickable="false"
+        />
       </div>
     </div>
   </NuxtLink>

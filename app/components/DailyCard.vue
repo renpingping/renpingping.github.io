@@ -13,12 +13,26 @@ defineProps({
 <template>
   <div class="daily-card">
     <div class="daily-title">
-      <a :href="url" target="_blank" rel="noopener">{{ title }}</a>
+      <a
+        :href="url"
+        target="_blank"
+        rel="noopener"
+      >{{ title }}</a>
     </div>
     <div class="daily-meta">
-      <span v-if="chip" class="daily-chip" :class="chipClass">{{ chip }}</span>
-      <span v-if="metric" class="daily-metric">{{ metric }}</span>
-      <span class="daily-score" :class="{ hot }">{{ hot ? `⭐ ${score}` : `${score}分` }}</span>
+      <span
+        v-if="chip"
+        class="daily-chip"
+        :class="chipClass"
+      >{{ chip }}</span>
+      <span
+        v-if="metric"
+        class="daily-metric"
+      >{{ metric }}</span>
+      <span
+        class="daily-score"
+        :class="{ hot }"
+      >{{ hot ? `⭐ ${score}` : `${score}分` }}</span>
     </div>
     <div class="daily-summary">
       <slot />

@@ -32,7 +32,11 @@ useHead({ title: `标签：${tag.value}` })
       <h1 class="mt-1 text-3xl font-bold text-zinc-900 dark:text-zinc-100"># {{ tag }}</h1>
     </header>
     <div class="grid gap-6 sm:grid-cols-2">
-      <PostCard v-for="post in matched" :key="post.path" :post="post" />
+      <PostCard
+        v-for="post in matched"
+        :key="post.path"
+        :post="post"
+      />
     </div>
   </div>
 </template>

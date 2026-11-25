@@ -17,7 +17,10 @@ useHead({ title: '文章' })
       <p class="mt-2 text-sm text-zinc-500">记录技术、工具与折腾的痕迹</p>
     </header>
 
-    <div v-if="allTags.length" class="mb-8 flex flex-wrap items-center gap-2">
+    <div
+      v-if="allTags.length"
+      class="mb-8 flex flex-wrap items-center gap-2"
+    >
       <button
         class="rounded-full px-3 py-1 text-sm font-medium transition-colors"
         :class="activeTag === null
@@ -37,9 +40,16 @@ useHead({ title: '文章' })
     </div>
 
     <div class="grid gap-6 sm:grid-cols-2">
-      <PostCard v-for="post in filtered" :key="post.path" :post="post" />
+      <PostCard
+        v-for="post in filtered"
+        :key="post.path"
+        :post="post"
+      />
     </div>
 
-    <p v-if="!filtered.length" class="py-16 text-center text-sm text-zinc-400">暂无文章</p>
+    <p
+      v-if="!filtered.length"
+      class="py-16 text-center text-sm text-zinc-400"
+    >暂无文章</p>
   </div>
 </template>

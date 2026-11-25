@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
-  images: { src: string; alt?: string }[]
+  images: { src: string, alt?: string }[]
   index: number
 }>()
 
@@ -41,7 +41,16 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         aria-label="关闭"
         @click="emit('close')"
       >
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" /></svg>
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        ><path
+          stroke-linecap="round"
+          d="M6 6l12 12M18 6L6 18"
+        /></svg>
       </button>
 
       <button
@@ -50,7 +59,17 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         aria-label="上一张"
         @click.stop="prev"
       >
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6" /></svg>
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        ><path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m15 18-6-6 6-6"
+        /></svg>
       </button>
 
       <img
@@ -66,7 +85,17 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         aria-label="下一张"
         @click.stop="next"
       >
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6" /></svg>
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        ><path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m9 18 6-6-6-6"
+        /></svg>
       </button>
 
       <p class="absolute bottom-4 text-sm text-white/60">{{ index + 1 }} / {{ images.length }}</p>

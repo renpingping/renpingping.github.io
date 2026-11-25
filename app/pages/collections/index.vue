@@ -15,7 +15,10 @@ useHead({ title: '收藏' })
       <p class="mt-2 text-sm text-zinc-500">读过并想留住的好文章与好资源</p>
     </header>
 
-    <div v-if="allTags.length" class="mb-8 flex flex-wrap items-center gap-2">
+    <div
+      v-if="allTags.length"
+      class="mb-8 flex flex-wrap items-center gap-2"
+    >
       <button
         class="rounded-full px-3 py-1 text-sm font-medium transition-colors"
         :class="activeTag === null
@@ -35,9 +38,16 @@ useHead({ title: '收藏' })
     </div>
 
     <div class="grid gap-4">
-      <CollectionCard v-for="item in filtered" :key="item.stem" :item="item" />
+      <CollectionCard
+        v-for="item in filtered"
+        :key="item.stem"
+        :item="item"
+      />
     </div>
 
-    <p v-if="!filtered.length" class="py-16 text-center text-sm text-zinc-400">暂无收藏</p>
+    <p
+      v-if="!filtered.length"
+      class="py-16 text-center text-sm text-zinc-400"
+    >暂无收藏</p>
   </div>
 </template>
