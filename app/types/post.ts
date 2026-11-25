@@ -1,4 +1,4 @@
-import type { BlogCollectionItem } from '@nuxt/content'
+import type { PostsCollectionItem } from '@nuxt/content'
 
 /**
  * 卡片需要的文章字段。列表类查询用 `.select(...POST_SUMMARY_FIELDS)` 只取这些字段，
@@ -6,4 +6,4 @@ import type { BlogCollectionItem } from '@nuxt/content'
  */
 export const POST_SUMMARY_FIELDS = ['path', 'title', 'description', 'date', 'tags', 'cover'] as const
 
-export type PostSummary = Pick<BlogCollectionItem, (typeof POST_SUMMARY_FIELDS)[number]>
+export type PostSummary = Pick<PostsCollectionItem, (typeof POST_SUMMARY_FIELDS)[number]>

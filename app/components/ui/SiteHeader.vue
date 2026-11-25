@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { navLabelOf, sections } from '~/config/sections'
+
 const config = useAppConfig()
 const open = ref(false)
 
+// 文章类板块来自注册表，新增板块会自动出现在导航里；其余是功能页
 const nav = [
   { label: '首页', to: '/' },
-  { label: '文章', to: '/blog' },
-  { label: '周报', to: '/weekly' },
+  ...sections.map(section => ({ label: navLabelOf(section), to: `/${section.key}` })),
   { label: 'Demo', to: '/projects' },
   { label: '画廊', to: '/gallery' },
   { label: '收藏', to: '/collections' },

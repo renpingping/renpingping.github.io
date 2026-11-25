@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
-// 长文阅读页（/blog/xxx、/weekly/xxx）用 039 流场背景，其余页面用 013 分支背景
-const isArticleDetail = computed(() => /^\/(blog|weekly)\/.+/.test(route.path))
+// 背景由页面自己声明：长文阅读页在 definePageMeta 里写 { background: 'flow' } 用流场，其余页面用分支生长
+const isArticleDetail = computed(() => route.meta.background === 'flow')
 </script>
 
 <template>

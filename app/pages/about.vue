@@ -1,15 +1,6 @@
 <script setup lang="ts">
 const config = useAppConfig()
 
-const skills = [
-  { name: 'JavaScript', percent: 88 },
-  { name: 'HTML5 / CSS3', percent: 80 },
-  { name: 'Vue', percent: 90 },
-  { name: 'React', percent: 92 },
-  { name: 'SQL', percent: 72 },
-  { name: '产品设计', percent: 88 },
-]
-
 useHead({ title: '关于' })
 </script>
 
@@ -22,9 +13,9 @@ useHead({ title: '关于' })
         class="h-24 w-24 rounded-full ring-4 ring-indigo-500/20"
       >
       <h1 class="mt-5 text-3xl font-bold text-zinc-900 dark:text-zinc-100">{{ config.site.author }}</h1>
-      <p class="mt-2 text-sm text-zinc-500">Software Engineer</p>
+      <p class="mt-2 text-sm text-zinc-500">{{ config.about.role }}</p>
       <p class="mt-6 leading-relaxed text-zinc-600 dark:text-zinc-400">
-        记录技术笔记、项目作品和读过的好的文章。
+        {{ config.about.intro }}
       </p>
       <div class="mt-6">
         <SocialLinks />
@@ -35,7 +26,7 @@ useHead({ title: '关于' })
       <h2 class="mb-5 font-semibold text-zinc-900 dark:text-zinc-100">技能</h2>
       <div class="space-y-4">
         <div
-          v-for="s in skills"
+          v-for="s in config.about.skills"
           :key="s.name"
         >
           <div class="mb-1 flex justify-between text-sm">

@@ -1,29 +1,22 @@
 import { defineContentConfig, defineCollection, z } from '@nuxt/content'
 
+// 所有文章类内容共用一个 schema；板块之间的差异（标题、版式、是否进首页等）在 app/config/sections.ts 里描述
+const postSchema = z.object({
+  title: z.string(),
+  description: z.string().optional(),
+  date: z.string(),
+  tags: z.array(z.string()).default([]),
+  cover: z.string().optional(),
+})
+
 export default defineContentConfig({
   collections: {
-    blog: defineCollection({
+    // 一级子目录名即板块：content/blog/a.md → /blog/a，content/weekly/b.md → /weekly/b。
+    // 新增板块不需要改这里，只要在 content/ 下建目录并在注册表里登记。
+    posts: defineCollection({
       type: 'page',
-      source: 'blog/*.md',
-      schema: z.object({
-        title: z.string(),
-        description: z.string().optional(),
-        date: z.string(),
-        tags: z.array(z.string()).default([]),
-        cover: z.string().optional(),
-      }),
-    }),
-
-    weekly: defineCollection({
-      type: 'page',
-      source: 'weekly/*.md',
-      schema: z.object({
-        title: z.string(),
-        description: z.string().optional(),
-        date: z.string(),
-        tags: z.array(z.string()).default([]),
-        cover: z.string().optional(),
-      }),
+      source: '*/*.md',
+      schema: postSchema,
     }),
 
     projects: defineCollection({

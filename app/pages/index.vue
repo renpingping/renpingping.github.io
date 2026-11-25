@@ -1,11 +1,7 @@
 <script setup lang="ts">
-import { POST_SUMMARY_FIELDS } from '~/types/post'
-
 const config = useAppConfig()
 
-const { data: posts } = await useAsyncData('home-posts', () =>
-  queryCollection('blog').select(...POST_SUMMARY_FIELDS).order('date', 'DESC').limit(4).all(),
-)
+const { data: posts } = await useHomePosts()
 const { data: projects } = await useAsyncData('home-projects', () =>
   queryCollection('projects').order('date', 'DESC').all(),
 )
@@ -29,7 +25,7 @@ const featured = computed(() => (projects.value ?? []).filter(p => p.featured).s
         {{ config.site.name }}
       </h1>
       <p class="mt-3 max-w-md text-zinc-500">
-        明年依然好时节，扬帆再赴星辰约
+        {{ config.site.tagline }}
       </p>
       <div class="mt-6">
         <SocialLinks />
