@@ -1,7 +1,7 @@
 <script setup lang="ts">
-defineProps<{
-  images: { src: string; alt?: string }[]
-}>()
+import type { GalleryCollectionItem } from '@nuxt/content'
+
+defineProps<{ images: GalleryCollectionItem['images'] }>()
 
 const emit = defineEmits<{ open: [index: number] }>()
 </script>

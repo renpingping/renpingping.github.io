@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { navLabelOf, sections } from '~/config/sections'
+
 const config = useAppConfig()
 const open = ref(false)
 
+// 文章类板块来自注册表，新增板块会自动出现在导航里；其余是功能页
 const nav = [
   { label: '首页', to: '/' },
-  { label: '文章', to: '/blog' },
-  { label: '周报', to: '/weekly' },
+  ...sections.map(section => ({ label: navLabelOf(section), to: `/${section.key}` })),
   { label: 'Demo', to: '/projects' },
   { label: '画廊', to: '/gallery' },
   { label: '收藏', to: '/collections' },
@@ -13,14 +15,24 @@ const nav = [
 ]
 
 const route = useRoute()
-watch(() => route.path, () => { open.value = false })
+// 路由变化时收起移动端菜单
+watch(() => route.path, () => {
+  open.value = false
+})
 </script>
 
 <template>
   <header class="sticky top-0 z-40 border-b border-zinc-200/70 bg-zinc-50/80 backdrop-blur dark:border-zinc-800/70 dark:bg-zinc-950/80">
     <div class="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-      <NuxtLink to="/" class="flex items-center gap-2 font-bold text-zinc-900 dark:text-zinc-100">
-        <img src="/logo.png" alt="logo" class="h-7 w-7 rounded-md" >
+      <NuxtLink
+        to="/"
+        class="flex items-center gap-2 font-bold text-zinc-900 dark:text-zinc-100"
+      >
+        <img
+          src="/logo.png"
+          alt="logo"
+          class="h-7 w-7 rounded-md"
+        >
         <span>{{ config.site.name }}</span>
       </NuxtLink>
 
@@ -43,13 +55,36 @@ watch(() => route.path, () => { open.value = false })
           aria-label="菜单"
           @click="open = !open"
         >
-          <svg v-if="!open" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
-          <svg v-else class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" /></svg>
+          <svg
+            v-if="!open"
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          ><path
+            stroke-linecap="round"
+            d="M4 6h16M4 12h16M4 18h16"
+          /></svg>
+          <svg
+            v-else
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          ><path
+            stroke-linecap="round"
+            d="M6 6l12 12M18 6L6 18"
+          /></svg>
         </button>
       </div>
     </div>
 
-    <nav v-if="open" class="border-t border-zinc-200/70 px-4 py-2 md:hidden dark:border-zinc-800/70">
+    <nav
+      v-if="open"
+      class="border-t border-zinc-200/70 px-4 py-2 md:hidden dark:border-zinc-800/70"
+    >
       <NuxtLink
         v-for="item in nav"
         :key="item.to"

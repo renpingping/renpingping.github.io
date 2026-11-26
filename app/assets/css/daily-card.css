@@ -1,32 +1,37 @@
-/* 每日技术热读卡片样式（DailyCard 组件 + 主题适配） */
+/*
+ * 热读 / 周报卡片（DailyCard 组件）的样式。
+ * 颜色一律引用主题里的变量：Tailwind 色阶（--color-zinc-*、--color-indigo-*）
+ * 或 main.css 的 @theme 里定义的品牌色（--color-chip-*），不再直接写十六进制值。
+ * 各处颜色组合的对比度由 tests/unit/contrast.test.ts 校验。
+ */
 
 .daily-card {
   margin: 14px 0;
   padding: 14px 18px;
-  border: 1px solid #e4e8ec;
+  border: 1px solid var(--color-zinc-200);
   border-radius: 12px;
-  background: #fafbfc;
+  background: var(--color-zinc-50);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 html.dark .daily-card {
-  border-color: #2d333b;
-  background: rgba(22, 27, 34, 0.4);
+  border-color: var(--color-zinc-800);
+  background: color-mix(in srgb, var(--color-zinc-900) 40%, transparent);
 }
 .daily-card:hover {
-  border-color: #a5b4c6;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  border-color: var(--color-zinc-300);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 7%);
 }
 html.dark .daily-card:hover {
-  border-color: #444c56;
+  border-color: var(--color-zinc-700);
 }
 
-/* 标题：完全去除 a 标签样式（覆盖主题 .prose-ther a），悬停变色 */
+/* 标题 */
 .daily-title {
   font-size: 1.02rem;
   font-weight: 600;
   line-height: 1.55;
 }
-/* 分类标题：Nuxt Content 给 h1-h4 自动包了锚点<a>，同样去除链接样式 */
+/* 标题里的链接不带下划线（覆盖正文的链接样式），悬停变色 */
 .prose-ther h1 a,
 .prose-ther h2 a,
 .prose-ther h3 a,
@@ -48,14 +53,13 @@ html.dark .daily-card:hover {
 }
 .prose-ther .daily-title a:hover,
 .daily-title a:hover {
-  color: #0969da;
-  text-decoration: none;
+  color: var(--color-indigo-600);
 }
 html.dark .daily-title a:hover {
-  color: #58a6ff;
+  color: var(--color-indigo-400);
 }
 
-/* 信息行：来源chip + 热度 + 推荐分 */
+/* 信息行：来源标签 + 热度 + 推荐分 */
 .daily-meta {
   display: flex;
   align-items: center;
@@ -63,10 +67,10 @@ html.dark .daily-title a:hover {
   gap: 8px;
   margin-top: 9px;
   font-size: 12px;
-  color: #57606a;
+  color: var(--color-zinc-600);
 }
 html.dark .daily-meta {
-  color: #8b949e;
+  color: var(--color-zinc-400);
 }
 .daily-chip {
   padding: 2px 10px;
@@ -76,11 +80,13 @@ html.dark .daily-meta {
   color: #fff;
   white-space: nowrap;
 }
-.chip-hn { background: #ff6600; }
-.chip-juejin { background: #1e80ff; }
-.chip-qbitai { background: #00b96b; }
-.chip-bili { background: #fb7299; }
-.chip-other { background: #8c959f; }
+/* 来源标签的底色是 @theme 里的品牌色，白字对比度均不低于 4.8:1 */
+.chip-hn { background: var(--color-chip-hn); }
+.chip-juejin { background: var(--color-chip-juejin); }
+.chip-qbitai { background: var(--color-chip-qbitai); }
+.chip-bili { background: var(--color-chip-bili); }
+.chip-other { background: var(--color-chip-other); }
+
 .daily-metric {
   font-variant-numeric: tabular-nums;
 }
@@ -88,34 +94,36 @@ html.dark .daily-meta {
   margin-left: auto;
   padding: 2px 10px;
   border-radius: 8px;
-  background: #eaeef2;
-  color: #57606a;
+  background: var(--color-zinc-100);
+  color: var(--color-zinc-600);
   font-weight: 700;
   font-size: 12.5px;
   white-space: nowrap;
 }
 .daily-score.hot {
-  background: #1a7f37;
+  background: var(--color-chip-hot);
   color: #fff;
 }
 html.dark .daily-score {
-  background: #21262d;
-  color: #8b949e;
+  background: var(--color-zinc-800);
+  color: var(--color-zinc-400);
 }
+/* 这条规则的优先级高于 .daily-score.hot，必须显式写出，否则暗色下「热门」会被换成不达标的底色 */
 html.dark .daily-score.hot {
-  background: #2ea043;
+  background: var(--color-chip-hot);
+  color: #fff;
 }
 
 /* 摘要：左侧竖线引用 */
 .daily-summary {
   margin-top: 9px;
   padding-left: 10px;
-  border-left: 3px solid #d8dee4;
+  border-left: 3px solid var(--color-zinc-200);
   font-size: 13.5px;
   line-height: 1.65;
-  color: #4b535c;
+  color: var(--color-zinc-700);
 }
 html.dark .daily-summary {
-  border-left-color: #30363d;
-  color: #9198a1;
+  border-left-color: var(--color-zinc-800);
+  color: var(--color-zinc-400);
 }

@@ -12,6 +12,17 @@
 
 @theme {
   --font-sans: "MyHand", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /*
+   * 热读卡片来源标签的底色：保持各平台原有的色相，只降低明度，使白字对比度不低于 4.8:1。
+   * 由 tests/unit/contrast.test.ts 读取这里的值校验。
+   */
+  --color-chip-hn: #bf4c00; /* Hacker News */
+  --color-chip-juejin: #1a6fde; /* 掘金 */
+  --color-chip-qbitai: #00834c; /* 量子位 */
+  --color-chip-bili: #b2516d; /* B 站 */
+  --color-chip-other: #6c737a; /* 其它来源 */
+  --color-chip-hot: #1a7f37; /* 「热门」评分 */
 }
 
 html {
@@ -24,6 +35,25 @@ body {
 
 ::selection {
   @apply bg-indigo-500/30;
+}
+
+@layer components {
+  /*
+   * 小字元信息与说明文字（日期、数量、副标题、摘要、上下篇标签）。
+   * 浅色用 zinc-600、暗色用 zinc-400：对页面底色与卡片底色都达到 WCAG AA（4.5:1），
+   * 由 tests/unit/contrast.test.ts 直接读取这里的颜色值校验。
+   */
+  .text-muted {
+    @apply text-zinc-600 dark:text-zinc-400;
+  }
+
+}
+
+/* 卡片外观：文章、项目、收藏卡片与关于页的面板共用 */
+@layer components {
+  .card-surface {
+    @apply rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900;
+  }
 }
 
 /* Shiki 双主题：暗色下切换到 dark 变量 */
@@ -39,6 +69,10 @@ html.dark .shiki span {
 /* Content 正文排版：加半透明底板 + 轻微模糊，避免背景分支影响阅读 */
 .prose-ther {
   @apply rounded-2xl bg-zinc-50/80 p-6 leading-relaxed shadow-xs backdrop-blur-[2px] sm:p-8 dark:bg-zinc-900/70;
+}
+/* 点击目录或文内锚点跳转后，标题要完整露在吸顶导航栏（56px）下方 */
+.prose-ther :is(h1, h2, h3, h4, h5, h6) {
+  scroll-margin-top: 5rem;
 }
 .prose-ther h2 {
   @apply mt-10 mb-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100;

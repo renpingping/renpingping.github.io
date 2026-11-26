@@ -22,7 +22,9 @@ function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
+    const current = a[i]!
+    a[i] = a[j]!
+    a[j] = current
   }
   return a
 }
@@ -64,7 +66,8 @@ function flip(card: Card) {
 
   moves.value++
   lock.value = true
-  if (open[0].emoji === open[1].emoji) {
+  const [first, second] = open
+  if (first && second && first.emoji === second.emoji) {
     open.forEach((c) => {
       c.matched = true
       c.flipped = false
@@ -79,7 +82,7 @@ function flip(card: Card) {
   }
 }
 
-useHead({ title: '记忆翻牌' })
+usePageSeo(() => ({ title: '记忆翻牌', description: 'Vue 3 组合式 API 实现的记忆翻牌小游戏，含计步与计时' }))
 </script>
 
 <template>
@@ -87,9 +90,9 @@ useHead({ title: '记忆翻牌' })
     <header class="mb-6 flex items-end justify-between">
       <div>
         <h1 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">记忆翻牌</h1>
-        <p class="mt-1 text-sm text-zinc-500">Vue 3 响应式 + 组合式 API 小游戏</p>
+        <p class="mt-1 text-sm text-muted">Vue 3 响应式 + 组合式 API 小游戏</p>
       </div>
-      <div class="flex items-center gap-4 text-sm text-zinc-500">
+      <div class="flex items-center gap-4 text-sm text-muted">
         <span>⏱ {{ elapsed }}s</span>
         <span>🎯 {{ moves }} 步</span>
       </div>

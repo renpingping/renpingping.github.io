@@ -1,14 +1,7 @@
 <script setup lang="ts">
-defineProps<{
-  album: {
-    stem: string
-    title: string
-    description?: string
-    cover?: string
-    date: string
-    images: { src: string; alt?: string }[]
-  }
-}>()
+import type { GalleryCollectionItem } from '@nuxt/content'
+
+defineProps<{ album: GalleryCollectionItem }>()
 
 const slug = (stem: string) => stem.split('/').pop()!
 </script>
